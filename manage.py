@@ -6,7 +6,7 @@ from flask.ext.script import Manager
 
 from grocery_list import app
 
-manager = Manager()
+manager = Manager(app)
 
 @manager.command
 def run():
