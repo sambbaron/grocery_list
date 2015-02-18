@@ -31,6 +31,7 @@ class Store(Base):
     Attributes:
         name (str, required): Store name
         address (str): Store address
+        default (bool): Default store in selection
 
     Example:
         Whole Foods 123 Main St New York, NY 12345
@@ -41,8 +42,10 @@ class Store(Base):
     name = Column(String(50), nullable=False)
     street_address = Column(String(100))
     city = Column(String(50))
+    state = Column(String(2))
     postal_code = Column(String(10))
     country = Column(String(50))
+    default = Column(Boolean, default=False)
 
     user = relationship("UserStore", backref="store")
     route = relationship("StoreRoute", backref="store")
