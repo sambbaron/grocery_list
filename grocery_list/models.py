@@ -69,8 +69,8 @@ class Route(Base):
     Attributes:
         name (str, required): Route name
         default (bool): Default route for creating lists
-        user (fk): User
-        store (fk): Store
+        user_id (fk): User
+        store_id (fk): Store
 
     Examples:
         Full Shop - route used to shop in entire store
@@ -85,6 +85,7 @@ class Route(Base):
 
     user_id = Column(Integer, ForeignKey("user.id"), index=True)
     store_id = Column(Integer, ForeignKey("store.id"), index=True)
+
     list = relationship("List", backref="route")
 
 
@@ -109,29 +110,47 @@ class ItemGroup(Base):
     name = Column(String(50), nullable=False)
     description = Column(String(100))
 
-    stores = relationship("ItemGroup",
-                          secondary="item_group_store",
+    store = relationship("ItemGroup",
+                          secondary="store_item_group",
                           backref="item_group"
     )
+    route = relationship("RouteGroup", backref="item_group")
 
-    routes = relationship("ItemGroup",
-                          secondary="item_group_route",
-                          backref="item_group"
-    )
-
-    list_items = relationship("ListItem", backref="item_group")
 
 # Item Groups assigned to Stores
-itemGroup_store_table = Table("item_group_store", Base.metadata,
+store_itemGroup_table = Table("store_item_group", Base.metadata,
                          Column("item_group_id", Integer, ForeignKey("item_group.id"), nullable=False, index=True),
                          Column("store_id", Integer, ForeignKey("store.id"), nullable=False, index=True)
 )
 
-# Item Groups assigned to Routes
-itemGroup_route_table = Table("item_group_route", Base.metadata,
-                         Column("item_group_id", Integer, ForeignKey("item_group.id"), nullable=False, index=True),
-                         Column("route_id", Integer, ForeignKey("route.id"), nullable=False, index=True)
-)
+
+class RouteGroup(Base):
+    """ Item Groups assigned to Routes
+
+    Sort order for use in Lists
+
+    Attributes:
+        route_id (fk, required): Route
+        item_group_Id (fk, required): Item Group
+        route_order (int, default=0): Sort order for Item Groups in Route
+
+    Examples:
+        Route: Full Shop
+        Item Groups:
+            Vegetables - 1
+            Fruits - 2
+            International - 3
+            Meat - 4
+    """
+    __tablename__ = "route_item_group"
+
+    id = Column(Integer, primary_key=True)
+    route_id = Column(Integer, ForeignKey("route.id"), index=True)
+    item_group_id = Column(Integer, ForeignKey("item_group.id"), index=True)
+    route_order = Column(Integer, default=0)
+
+    list_item = relationship("ListItem", backref="route_item_group")
+
 
 
 class List(Base):
@@ -140,8 +159,8 @@ class List(Base):
     Attributes:
         shop_date (date, required): Shopping date
         name (str): List name
-        user (fk): User
-        route (fk): Route (with related Store)
+        user_id (fk): User
+        route_id (fk): Route (with related Store)
 
     Example:
         2/17/05, Full Shop, Whole Foods Downtown
@@ -154,6 +173,8 @@ class List(Base):
 
     user_id = Column(Integer, ForeignKey("user.id"), index=True)
     route_id = Column(Integer, ForeignKey("route.id"), index=True)
+
+    list_item = relationship("ListItem", backref="list")
 
 
 class ItemMeasurements(Base):
@@ -175,7 +196,7 @@ class ItemMeasurements(Base):
     name = Column(String(25), nullable=False)
     abbreviation = Column(String(10), nullable=False)
 
-    list_items = relationship("ListItem", backref="item_measurement")
+    list_item = relationship("ListItem", backref="item_measurement")
 
 
 class ListItem(Base):
@@ -189,8 +210,9 @@ class ListItem(Base):
         item_notes (str): Additional information on item, such as
             type, brand, or variety
         item_quantity (decimal): How much of item to be purchased
-        item_measurement (fk): Measurement corresponding to quantity
-        item_group (fk, required): Item group for routing
+        list_id (fk, required): List header
+        item_measurement_id (fk): Measurement corresponding to quantity
+        route_item_group_id (fk, required): Item Group assigned to Route used for sorting
 
     Examples:
         Onion, Yellow, 5, each, Vegetables
@@ -204,8 +226,9 @@ class ListItem(Base):
     item_notes = Column(String(100))
     item_quantity = Column(Numeric)
 
+    list_id = Column(Integer, ForeignKey("list.id"), nullable=False, index=True)
     item_measurement_id = Column(Integer, ForeignKey("item_measurement.id"))
-    item_group_id = Column(Integer, ForeignKey("item_group.id"), nullable=False, index=True)
+    route_item_group_id = Column(Integer, ForeignKey("route_item_group.id"), nullable=False, index=True)
 
 
 
