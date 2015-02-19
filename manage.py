@@ -7,7 +7,7 @@ from flask.ext.script import Manager
 from grocery_list import app
 
 from grocery_list.database import Base, engine
-from grocery_list.models import *
+from tests import test_data
 
 manager = Manager(app)
 
@@ -23,9 +23,17 @@ def resetdb():
     """ Drop and create development database """
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-    print("Tables Added:")
-    for table in engine.table_names():
-        print(table)
+    table_count = len([x for x in engine.table_names()])
+    print("Database reset. {} tables added.".format(table_count))
+
+@manager.command
+def seed_data():
+    """ Add all test data to development database """
+    resetdb()
+    test_data.add_list()
+    print("Seed data added.")
+
+
 
 if __name__ == "__main__":
     manager.run()
