@@ -119,6 +119,7 @@ class ItemGroup(Base):
                           backref="item_group"
     )
     route = relationship("RouteGroup", backref="item_group")
+    list_item = relationship("ListItem", backref="item_group")
 
 
 # Item Groups assigned to Stores
@@ -152,9 +153,6 @@ class RouteGroup(Base):
     route_id = Column(Integer, ForeignKey("route.id"), index=True)
     item_group_id = Column(Integer, ForeignKey("item_group.id"), index=True)
     route_order = Column(Integer, default=0)
-
-    list_item = relationship("ListItem", backref="route_item_group")
-
 
 
 class List(Base):
@@ -232,7 +230,7 @@ class ListItem(Base):
 
     list_id = Column(Integer, ForeignKey("list.id"), nullable=False, index=True)
     item_measurement_id = Column(Integer, ForeignKey("item_measurement.id"))
-    route_item_group_id = Column(Integer, ForeignKey("route_item_group.id"), nullable=False, index=True)
+    item_group_id = Column(Integer, ForeignKey("item_group.id"), nullable=False, index=True)
 
 
 
