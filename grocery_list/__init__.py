@@ -16,3 +16,6 @@ from . import views
 # Database initialization
 from .database import Base, engine
 Base.metadata.create_all(engine)
+
+# Import Flask-Login LoginManager
+from . import login

@@ -3,8 +3,8 @@
 from flask.ext.login import LoginManager
 
 from . import app
-from models import User
-from database import session
+from .models import User
+from .database import session
 
 # Initialize Login Manager for user management
 login_manager = LoginManager()
