@@ -38,6 +38,12 @@ class TestViews(unittest.TestCase):
         # Remove tables from testing database
         Base.metadata.drop_all(engine)
 
+    def simulate_login(self):
+        """ Simulate user login within testing session """
+        with self.client.session_transaction as http_session:
+            http_session["user_id"] = str(self.user.id)
+            http_session["_fresh"] = True
+
 
 
 if __name__ == "__main__":
