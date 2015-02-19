@@ -24,7 +24,7 @@ class User(Base, UserMixin):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), default="Guest")
     email = Column(String(50), unique=True)
-    password = Column(String(50))
+    password = Column(String(128))
 
     store = relationship("UserStore", backref="user")
     route = relationship("Route", backref="user")
