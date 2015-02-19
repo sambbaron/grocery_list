@@ -66,6 +66,11 @@ class UserStore(Base):
     """ Association of Users and Stores
 
     Allow users to assign "My Stores"
+
+    Attributes:
+        user_id (fk, primary key): User
+        store_id (fk, primary key): Store
+        nickname (str): User defined store name different from place name
     """
     __tablename__ = "user_store"
 
