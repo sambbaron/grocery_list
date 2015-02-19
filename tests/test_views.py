@@ -2,11 +2,12 @@
 
 import os
 import unittest
+import datetime
 
 from werkzeug.security import generate_password_hash
 
 from grocery_list import app
-from grocery_list import models
+from grocery_list.models import *
 from grocery_list.database import Base, engine, session
 
 # App configuration for testing environment
@@ -25,13 +26,6 @@ class TestViews(unittest.TestCase):
         self.client = app.test_client()
         # Create tables in testing database
         Base.metadata.create_all(engine)
-        # Create example user
-        self.user = models.User(name="Testy",
-                                email="testy@test.com",
-                                password=generate_password_hash("test")
-        )
-        session.add(self.user)
-        session.commit()
 
     def tearDown(self):
         session.close()
