@@ -15,10 +15,9 @@ class User(Base, UserMixin):
     __tablename__ = "user"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(50))
+    name = Column(String(50), default="Guest")
     email = Column(String(50), unique=True)
     password = Column(String(50))
-    guest = Column(Boolean, default=False)
 
     store = relationship("UserStore", backref="user")
     route = relationship("Route", backref="user")
