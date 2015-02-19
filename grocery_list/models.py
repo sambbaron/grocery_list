@@ -59,7 +59,7 @@ class Store(Base):
     default = Column(Boolean, default=False)
 
     user = relationship("UserStore", backref="store")
-    route = relationship("StoreRoute", backref="store")
+    route = relationship("Route", backref="store")
 
 
 class UserStore(Base):
