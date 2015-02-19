@@ -11,6 +11,13 @@ from .database import Base, engine
 
 
 class User(Base, UserMixin):
+    """ Application Users
+
+    Attributes:
+        name (str): User name
+        email (str): User email address
+        password (str): User password (hashed)
+    """
 
     __tablename__ = "user"
 
