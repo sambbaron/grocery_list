@@ -37,7 +37,11 @@ class Store(Base):
 
     Attributes:
         name (str, required): Store name
-        address (str): Store address
+        street_address (str): Store address
+        city (str): City
+        state (str): 2-character state code
+        postal_code (str): 10-character postal code
+        country (str): Country code (undefined)
         default (bool): Default store in selection
 
     Example:
