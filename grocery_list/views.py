@@ -1,7 +1,7 @@
 """ Application Views """
 
 from flask import render_template, redirect, url_for, request
-from flask.ext.login import current_user, login_user, logout_user,flash
+from flask.ext.login import current_user, login_user, logout_user, flash, login_required
 from werkzeug.security import check_password_hash
 
 from . import app
@@ -59,6 +59,16 @@ def logout():
     """ Returns: Login page """
     logout_user()
     return redirect(url_for("login"))
+
+
+@app.route("/profile")
+@login_required
+def profile():
+    """ Access User Profile
+
+    Sign-up or Edit
+    """
+    return render_template("profile.html")
 
 
 @app.route("/stores")
