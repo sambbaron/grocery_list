@@ -1,11 +1,12 @@
 """ Application Views """
 
-from flask import render_template, redirect, url_for
-from flask.ext.login import current_user
+from flask import render_template, redirect, url_for, request
+from flask.ext.login import current_user, login_user, flash
+from werkzeug.security import check_password_hash
 
 from . import app
 from .database import session
-from .models import List, Route
+from .models import *
 
 @app.route("/")
 def index():
@@ -26,7 +27,26 @@ def index():
     else:
         return redirect(url_for("/user/" + current_user + "/stores"))
 
-@app.route("/login", methods=["GET"])
-def login_get():
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
     """ Returns: Login page """
+
+    if request.method == "POST":
+        #HTML form entry
+        email = request.form["email"]
+        password = request.form["password"]
+        # Return user
+        user = session.query(User).filter_by(email=email).first()
+        if user and check_password_hash(user.password, password):
+            # Successful login
+            login_user(user)
+            flash("Logged in successfully.")
+            return redirect(request.args.get("next") or url_for("index"))
+        else:
+            # Unsuccessful login
+            flash("Incorrect username or password", "danger")
+            return redirect(url_for("login"))
+
+    # GET request
     return render_template("login.html")
