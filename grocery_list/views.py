@@ -15,7 +15,7 @@ def index():
 
     # If no user, redirect to login
     if current_user.is_anonymous() == True:
-        return redirect(url_for("login_get"))
+        return redirect(url_for("login"))
     # Redirect to Lists if exist
     elif session.query(List).filter("user_id" == current_user).first() is not None:
         return redirect(url_for("/user/" + current_user + "/lists"))
