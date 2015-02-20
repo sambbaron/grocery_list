@@ -72,15 +72,18 @@ def profile():
 
 
 @app.route("/stores")
+@login_required
 def stores():
     return render_template("stores.html")
 
 
 @app.route("/routes")
+@login_required
 def routes():
     return render_template("routes.html")
 
 
 @app.route("/lists")
+@login_required
 def lists():
     return render_template("lists.html")
