@@ -52,3 +52,18 @@ def login():
 
     # GET request
     return render_template("login.html")
+
+
+@app.route("/stores")
+def stores():
+    return render_template("stores.html")
+
+
+@app.route("/routes")
+def routes():
+    return render_template("routes.html")
+
+
+@app.route("/lists")
+def lists():
+    return render_template("lists.html")
