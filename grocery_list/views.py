@@ -17,15 +17,17 @@ def index():
     # If no user, redirect to login
     if current_user.is_anonymous() == True:
         return redirect(url_for("login"))
+    
+    user_id = current_user.get_id()
     # Redirect to Lists if exist
-    elif session.query(List).filter("user_id" == current_user).first() is not None:
-        return redirect(url_for("/user/" + current_user + "/lists"))
+    if session.query(List).filter("user_id" == user_id).first() is not None:
+        return redirect(url_for("/lists"))
     # Redirect to Routes if exist
-    elif session.query(Route).filter("user_id" == current_user).first() is not None:
-        return redirect(url_for("/user/" + current_user + "/routes"))
+    elif session.query(Route).filter("user_id" == user_id).first() is not None:
+        return redirect(url_for("/routes"))
     # Else redirect to Stores
     else:
-        return redirect(url_for("/user/" + current_user + "/stores"))
+        return redirect(url_for("/stores"))
 
 
 @app.route("/login", methods=["GET", "POST"])
