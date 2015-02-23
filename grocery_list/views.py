@@ -62,13 +62,22 @@ def logout():
 
 
 @app.route("/profile")
-@login_required
 def profile():
     """ Access User Profile
 
     Sign-up or Edit
     """
-    return render_template("profile.html")
+
+    # New User signup
+    if current_user.is_anonymous() == True:
+        return render_template("profile.html")
+
+    # Return existing User profile data
+    user = session.query(User).get(int(current_user.get_id()))
+    return render_template("profile.html",
+                           name=user.name,
+                           email=user.email
+    )
 
 
 @app.route("/stores")
