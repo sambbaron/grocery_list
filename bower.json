@@ -1,0 +1,21 @@
+{
+  "name": "grocery_list",
+  "version": "0.0.0",
+  "homepage": "https://github.com/sambbaron/grocery_list",
+  "authors": [
+    "Sam Baron <sambaron@ownmail.net>"
+  ],
+  "main": "grocery_list",
+  "license": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery.serializeJSON": "~2.4.2"
+  }
+}

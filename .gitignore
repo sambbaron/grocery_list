@@ -2,6 +2,9 @@
 ### My additions
 # PyCharm
 .idea/
+# Bower
+.bowerrc
+grocery_list/static/bower
 
 
 ### Python template
@@ -59,5 +62,3 @@ docs/_build/
 
 # PyBuilder
 target/
-
-
