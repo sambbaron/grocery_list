@@ -3,7 +3,7 @@
 import json
 
 from flask import request, Response, url_for
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from jsonschema import validate, ValidationError
 
 from . import app
@@ -100,7 +100,7 @@ def user_profile_put(id):
         return user
 
     # Test current password match
-    if data["password-current"] != user.password:
+    if not check_password_hash(user.password, data["password-current"]):
         message = "Current password is incorrect"
         data = json.dumps({"message": message})
         return Response(data, 401, mimetype="application/json")
