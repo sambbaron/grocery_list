@@ -3,21 +3,21 @@
  */
 
 
-var sendData = function (button, formID) {
+var sendData = function (button) {
 
     // Disable button
     button.disabled = "disabled";
     button.innerHTML = "Sending";
 
     // Set form element
-    var form = document.getElementById(formID);
+    var form = button.parentNode;
 
     // Make AJAX request using form method
     var ajax = $.ajax({
         type: form.elements["_method"].value,
         url: form.action,
         async: true,
-        data: JSON.stringify($("#"+formID).serializeJSON()),
+        data: JSON.stringify($(form).serializeJSON()),
         dataType: "json",
         contentType: "application/json",
         cache: false,
