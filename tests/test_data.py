@@ -21,8 +21,10 @@ def add_store():
 
     Associated with test User from setUp
     """
-    store = Store(name="Test Store", default=True)
-    session.add(store)
+    store1 = Store(name="Test Store", default=True)
+    store2 = Store(name="Other Store", default=True)
+
+    session.add_all([store1, store2])
     session.commit()
 
 
@@ -37,11 +39,16 @@ def add_user_store():
     if session.query(Store).get(1) is None:
         add_store()
 
-    user_store = UserStore(user_id=1,
+    user_store1 = UserStore(user_id=1,
                            store_id=1,
                            nickname="My Test Store"
     )
-    session.add(user_store)
+    user_store2 = UserStore(user_id=1,
+                           store_id=2,
+                           nickname="My Other Store"
+    )
+
+    session.add_all([user_store1, user_store2])
     session.commit()
 
 
@@ -56,11 +63,16 @@ def add_route():
     if session.query(Store).get(1) is None:
         add_store()
 
-    route = Route(name="Full Shop",
+    route1 = Route(name="Full Shop",
                   default=True,
                   user_id=1, store_id=1
     )
-    session.add(route)
+    route2 = Route(name="Quick Shop",
+                  default=True,
+                  user_id=1, store_id=1
+    )
+
+    session.add_all([route1, route2])
     session.commit()
 
 
@@ -75,9 +87,14 @@ def add_list():
     if session.query(Route).get(1) is None:
         add_route()
 
-    list = List(shop_date=datetime.date.today(),
+    list1 = List(shop_date=datetime.date.today(),
                 user_id=1,
                 route_id=1
     )
-    session.add(list)
+    list2 = List(shop_date=datetime.date.today() + datetime.timedelta(days=7),
+                user_id=1,
+                route_id=1
+    )
+
+    session.add_all([list1, list2])
     session.commit()
