@@ -30,6 +30,7 @@ def resetdb():
 def seed_data():
     """ Add all test data to development database """
     resetdb()
+    test_data.add_user_store()
     test_data.add_list()
     print("Seed data added.")
 
