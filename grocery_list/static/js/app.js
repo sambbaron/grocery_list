@@ -28,13 +28,12 @@ var sendData = function (button) {
             button.disabled = "";
             button.innerHTML = "Submit";
 
-            // Set response data
+            // Set response data and pass to form
             var respData = jqXHR.responseText;
             form = respData;
 
             // Set response message
-            var respParse = JSON.parse(respData);
-            var respMsg = respParse.message;
+            var respMsg = JSON.parse(respData).message;
             $("#message").text(respMsg);
 
         }
