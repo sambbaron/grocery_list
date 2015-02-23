@@ -30,8 +30,6 @@ class User(Base, UserMixin):
     route = relationship("Route", backref="user")
     list = relationship("List", backref="user")
 
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class Store(Base):
     """ Global list of stores
@@ -64,9 +62,6 @@ class Store(Base):
     user = relationship("UserStore", backref="store")
     route = relationship("Route", backref="store")
 
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
 
 class UserStore(Base):
     """ Association of Users and Stores
@@ -84,8 +79,6 @@ class UserStore(Base):
     store_id = Column(Integer, ForeignKey("store.id"), primary_key=True)
     nickname = Column(String(50))
 
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class Route(Base):
     """ Route - sorted collection of item groups by store
@@ -115,8 +108,6 @@ class Route(Base):
 
     list = relationship("List", backref="route")
 
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class ItemGroup(Base):
     """ Defined groups of items (section/department)
@@ -145,9 +136,6 @@ class ItemGroup(Base):
     )
     route = relationship("RouteGroup", backref="item_group")
     list_item = relationship("ListItem", backref="item_group")
-
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
 # Item Groups assigned to Stores
@@ -182,9 +170,6 @@ class RouteGroup(Base):
     item_group_id = Column(Integer, ForeignKey("item_group.id"), index=True)
     route_order = Column(Integer, default=0)
 
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
 
 class List(Base):
     """ Shopping List header
@@ -209,9 +194,6 @@ class List(Base):
 
     list_item = relationship("ListItem", backref="list")
 
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
 
 class ItemMeasurements(Base):
     """ Predefined measurements
@@ -233,9 +215,6 @@ class ItemMeasurements(Base):
     abbreviation = Column(String(10), nullable=False)
 
     list_item = relationship("ListItem", backref="item_measurement")
-
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
 class ListItem(Base):
@@ -268,6 +247,3 @@ class ListItem(Base):
     list_id = Column(Integer, ForeignKey("list.id"), nullable=False, index=True)
     item_measurement_id = Column(Integer, ForeignKey("item_measurement.id"))
     item_group_id = Column(Integer, ForeignKey("item_group.id"), nullable=False, index=True)
-
-    def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
