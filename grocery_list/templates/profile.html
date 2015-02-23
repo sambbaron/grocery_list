@@ -2,30 +2,31 @@
 {% block content %}
 
     <h2>User Profile</h2>
-        <form name="user-profile" id="user-profile" action={% if current_user.is_anonymous() == True %}"/api/user/profile"{% else %}"/api/user/{{ current_user.get_id() }}/profile"{% endif %} >
+
+    <form name="user-profile" id="user-profile" action={% if current_user.is_anonymous() == True %}"/api/user/profile"{% else %}"/api/user/{{ current_user.get_id() }}/profile"{% endif %} >
         <input type="hidden" name="_method" value={% if current_user.is_anonymous() == True  %}"post"{% else %}"put"{% endif %}/>
-        <fieldset>
+        <fieldset class="form-group">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Your Name (Optional)" value="{{ name }}">
+            <input type="text" class="form-control" name="name" placeholder="Your Name (Optional)" value="{{ name }}">
             <br>
             <label for="email">Email address</label>
-            <input type="email" id="email" name="email" placeholder="Email address" value="{{ email }}">
+            <input type="email" class="form-control" name="email" placeholder="Email address" value="{{ email }}">
         </fieldset>
-        <fieldset>
+        <fieldset class="form-group">
             <legend>Current Password is required; New Password is optional</legend>
             <label for="password-current">Current Password</label>
-            <input type="password" id="password-current" name="password-current" placeholder="Current Password" required>
+            <input type="password" class="form-control" name="password-current" placeholder="Current Password" required>
             <br>
             <label for="password-new">New Password</label>
-            <input type="password" id="password-new" name="password-new" placeholder="New Password">
+            <input type="password" class="form-control" name="password-new" placeholder="New Password">
             <br>
             <label for="password-new2">Reenter Password</label>
-            <input type="password" id="password-new2" name="password-new2" placeholder="Reenter Password">
+            <input type="password" class="form-control" name="password-new2" placeholder="Reenter Password">
         </fieldset>
 
         <br>
         <br>
-        <button type="button" id="submit-form" onclick="sendData(this)">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="sendData(this)">Submit</button>
     </form>
 
 
