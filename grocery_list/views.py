@@ -17,13 +17,14 @@ def index():
     # If no user, redirect to login
     if current_user.is_anonymous() == True:
         return redirect(url_for("login"))
-    
+
     user_id = int(current_user.get_id())
+
     # Redirect to Lists if exist
-    if session.query(List.id).filter(User.id == user_id).first() is not None:
+    if session.query(List.id).filter(List.user_id == user_id).first() is not None:
         return redirect(url_for("lists"))
     # Redirect to Routes if exist
-    elif session.query(Route.id).filter(User.id == user_id).first() is not None:
+    elif session.query(Route.id).filter(List.user_id == user_id).first() is not None:
         return redirect(url_for("routes"))
     # Else redirect to Stores
     else:
