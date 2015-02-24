@@ -22,7 +22,7 @@ def add_store():
     Associated with test User from setUp
     """
     store1 = Store(name="Test Store", default=True)
-    store2 = Store(name="Other Store", default=True)
+    store2 = Store(name="Other Store", default=False)
 
     session.add_all([store1, store2])
     session.commit()
@@ -68,7 +68,7 @@ def add_route():
                   user_id=1, store_id=1
     )
     route2 = Route(name="Quick Shop",
-                  default=True,
+                  default=False,
                   user_id=1, store_id=1
     )
 
