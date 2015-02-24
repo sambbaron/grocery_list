@@ -165,7 +165,7 @@ def profile_put(id):
 @app.route("/stores/<int:id>", methods=["GET"])
 @app.route("/stores", methods=["GET"])
 @login_required
-def store_get(id=0):
+def store_get(id=None):
     """ Retrieve all stores list and single store detail form
 
     Return:
@@ -177,7 +177,7 @@ def store_get(id=0):
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()).all()
 
     # Single store provided
-    if id != 0:
+    if id is not None:
         # Retrieve single selected store
         user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
                                                      UserStore.store_id == id).first()
