@@ -29,7 +29,7 @@ def index():
         return redirect(url_for("routes"))
     # Else redirect to Stores
     else:
-        return redirect(url_for("stores_get"))
+        return redirect(url_for("store_get"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -161,20 +161,22 @@ def profile_put(id):
     return redirect(url_for("profile_get"))
 
 
-@app.route("/stores", methods=["GET"])
+@app.route("/stores/new", methods=["GET"])
 @app.route("/stores/<int:id>", methods=["GET"])
+@app.route("/stores", methods=["GET"])
 @login_required
-def stores_get(id=0):
-    """ Retrieve all stores or single store
-
-    All stores for list, single store for detail
+def store_get(id=0):
+    """ Retrieve all stores list and single store detail form
 
     Return:
-        stores template
+        New Store: Empty store detail form
+        Single Store: Store detail form for single store
+        All Stores: All store list with empty store detail form
     """
     # Retrieve all stores for current user
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()).all()
 
+    # Single store provided
     if id != 0:
         # Retrieve single selected store
         user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
@@ -182,19 +184,52 @@ def stores_get(id=0):
         # Test whether store exists
         if user_store is None:
             flash("Could not find store with id {}".format(UserStore.store_id),"danger")
-            return redirect(url_for("stores_get"))
+            return redirect(url_for("store_get"))
+    # New store requested
+    elif request.path == "/stores/new":
+        # Set as new store entry
+        user_store = "new"
     else:
-        user_store = False
+        # Set as no store entry
+        user_store = "empty"
 
     return render_template("stores.html", stores=stores, store=user_store)
 
 
+@app.route("/stores/new", methods=["POST"])
+@login_required
+def store_post():
+    """ Create new store
+
+    Add store record and associate with current user
+    Data added with put method
+
+    Return:
+        Store put method to update data to new record
+    """
+    # Create new Store
+    store = Store(name="New Store")
+    session.add(store)
+    session.commit()
+
+    # Associate new Store with current User
+    user_store = UserStore(store_id = store.id,
+                           user_id = int(current_user.get_id())
+    )
+    session.add(user_store)
+    session.commit()
+
+    # Put form data to new Store
+    return store_put(store.id)
+
+
 @app.route("/stores/<int:id>", methods=["PUT", "POST"])
+@login_required
 def store_put(id):
     """ Edit existing store
 
     Return:
-        Refresh store page
+        Single store page
     """
     # Return form data
     data = request.form
@@ -203,8 +238,8 @@ def store_put(id):
                                                      UserStore.store_id == id).first()
     # Test whether UserStore record exists
     if not user_store:
-        flash("Could not find store with id {}".format(UserStore.store_id),"danger")
-        return redirect(url_for("stores_get"))
+        flash("Could not find store with id {} for current user".format(UserStore.store_id),"danger")
+        return redirect(url_for("store_get"))
 
     # Set table objects for SQL update
     user_store_tbl = UserStore.__table__
@@ -231,8 +266,9 @@ def store_put(id):
     engine.execute(stmt)
 
     flash("Successfully updated store", "success")
-    return redirect("{}/{}".format(url_for("stores_get"), id))
+    return redirect("{}/{}".format(url_for("store_get"), id))
 
+# TODO: Default value not passing through form
 
 @app.route("/routes")
 @login_required
