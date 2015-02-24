@@ -59,7 +59,6 @@ class Store(Base):
     country = Column(String(50))
 
     user = relationship("UserStore", backref="store")
-    route = relationship("Route", backref="store")
 
 
 class UserStore(Base):
@@ -104,9 +103,21 @@ class Route(Base):
     default = Column(Boolean, default=False)
 
     user_id = Column(Integer, ForeignKey("user.id"), index=True)
-    store_id = Column(Integer, ForeignKey("store.id"), index=True)
 
+    store = relationship("Store",
+                         secondary="route_store",
+                         backref="route")
     list = relationship("List", backref="route")
+
+
+# Routes assigned to Stores
+# Allow users to use routes without stores
+# Create default route
+route_store_table = Table("route_store", Base.metadata,
+                         Column("route_id", Integer, ForeignKey("route.id"), nullable=False, index=True),
+                         Column("store_id", Integer, ForeignKey("store.id"), nullable=False, index=True)
+)
+
 
 
 class ItemGroup(Base):
@@ -130,7 +141,7 @@ class ItemGroup(Base):
     name = Column(String(50), nullable=False)
     description = Column(String(100))
 
-    store = relationship("ItemGroup",
+    store = relationship("Store",
                           secondary="store_item_group",
                           backref="item_group"
     )

@@ -67,15 +67,37 @@ def add_route():
 
     route1 = Route(name="Full Shop",
                   default=True,
-                  user_id=1, store_id=1
+                  user_id=1
     )
     route2 = Route(name="Quick Shop",
                   default=False,
-                  user_id=1, store_id=1
+                  user_id=1
     )
 
     session.add_all([route1, route2])
     session.commit()
+
+
+# def add_route_store():
+#     """ Add Test RouteStore association
+#
+#     Associated with test Route and Store
+#     """
+#     # Check for test User and Store
+#     if session.query(Route).get(1) is None:
+#         add_route()
+#     if session.query(Store).get(1) is None:
+#         add_store()
+#
+#     route_store1 = RouteStore(route_id=1,
+#                            store_id=1
+#     )
+#     route_store2 = RouteStore(route_id=2,
+#                            store_id=1
+#     )
+#
+#     session.add_all([route_store1, route_store2])
+#     session.commit()
 
 
 def add_list():
