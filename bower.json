@@ -6,16 +6,19 @@
     "Sam Baron <sambaron@ownmail.net>"
   ],
   "main": "grocery_list",
-  "license": "",
+  "license": "MIT",
   "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "grocery_list/static/bower/"
   ],
   "dependencies": {
-    "jquery.serializeJSON": "~2.4.2"
+    "bootstrap": "~3.3.2",
+    "jquery": "~2.1.3",
+    "form2js": "*"
   }
 }
