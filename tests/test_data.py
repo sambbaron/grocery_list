@@ -18,11 +18,15 @@ def add_all():
 
 def add_user():
     """ Add Test User """
-    user = User(name="Testy",
+    user1 = User(name="Testy",
                 email="testy@test.com",
                 password=generate_password_hash("test")
     )
-    session.add(user)
+    user2 = User(name="Testy2",
+                email="testy2@test.com",
+                password=generate_password_hash("test")
+    )
+    session.add_all([user1, user2])
     session.commit()
 
 
