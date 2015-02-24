@@ -26,6 +26,8 @@ class Base(object):
 
         return data_dict
 
+        # TODO: Try self.__mapper__.columns to retrieve all related columns as well
+
 
 # Database URI from config.py
 engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
