@@ -125,7 +125,43 @@ def user_profile_put(id):
     headers = {"Location": url_for("user_profile_get", id=user.id)}
     message = "Successfully updated user profile"
 
-    data_dict = user.as_dict(["password"])
+    data_dict = user.as_dict_base(["password"])
+    data_dict.update({"message":message})
+    data_json = json.dumps(data_dict)
+
+    return Response(data_json, 200, headers=headers,
+                    mimetype="application/json")
+
+@app.route("/api/user/<int:user_id>/store/<int:store_id>", methods=["PUT"])
+@decorators.accept("application/json")
+def user_store_put(user_id, store_id):
+    """ Update my store (UserStore)
+
+    Return: user store data
+    """
+    data = request.json
+
+    # Lookup UserStore record
+    user_store = session.query(UserStore).filter(UserStore.user_id == user_id,
+                                                 UserStore.store_id == store_id).first()
+    if user_store is None:
+        message = "Could not find store with id {}".format(store_id)
+        user_store = json.dumps({"message": message})
+        return Response(user_store, 404, mimetype="application/json")
+
+    # Update user_store attributes
+    # for key, value in data.items():
+    #     print("Test user_store.key = {}".format(user_store.getattr(key)))
+    #     user_store.key = value
+
+    user_store.store.name = data["store.name"]
+
+    session.commit()
+
+    headers = {"Location": url_for("user_profile_get", id=user_store.user_id)}
+    message = "Successfully updated user store"
+
+    data_dict = user_store.as_dict_model()
     data_dict.update({"message":message})
     data_json = json.dumps(data_dict)
 
