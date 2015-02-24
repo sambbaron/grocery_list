@@ -3,7 +3,8 @@
 
     <h2>User Profile</h2>
 
-    <form name="user-profile" id="user-profile" action={% if current_user.is_anonymous() == True %}"/api/user/profile"{% else %}"/api/user/{{ current_user.get_id() }}/profile"{% endif %} >
+    <form name="user-profile" id="user-profile" method={% if current_user.is_anonymous() == True  %}"post"{% else %}"post"{% endif %}
+    action={% if current_user.is_anonymous() == True  %}"/profile/signup"{% else %}"/profile/{{ current_user.get_id() }}"{% endif %} >
         <input type="hidden" name="_method" value={% if current_user.is_anonymous() == True  %}"post"{% else %}"put"{% endif %}/>
         <fieldset class="form-group">
             <label for="name">Name</label>
@@ -15,7 +16,7 @@
         <fieldset class="form-group">
             <legend>Current Password is required; New Password is optional</legend>
             <label for="password-current">Current Password</label>
-            <input type="password" class="form-control" name="password-current" placeholder="Current Password" required>
+            <input type="password" class="form-control" name="password-current" placeholder="Current Password">
             <br>
             <label for="password-new">New Password</label>
             <input type="password" class="form-control" name="password-new" placeholder="New Password">
@@ -26,7 +27,7 @@
 
         <br>
         <br>
-        <button type="button" class="btn btn-primary" onclick="sendData(this)">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
 

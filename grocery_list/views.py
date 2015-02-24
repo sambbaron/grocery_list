@@ -1,8 +1,8 @@
 """ Application Views """
 
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, abort
 from flask.ext.login import current_user, login_user, logout_user, flash, login_required
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import app
 from .database import session
@@ -62,11 +62,13 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/profile")
-def profile():
-    """ Access User Profile
+@app.route("/profile", methods=["GET"])
+def profile_get():
+    """ Retrieve User Profile
 
-    Sign-up or Edit
+    Returns:
+        Empty profile template (signup), or
+        Current user profile page
     """
 
     # New User signup
@@ -79,6 +81,83 @@ def profile():
                            name=user.name,
                            email=user.email
     )
+
+
+@app.route("/profile/signup", methods=["POST"])
+def profile_post():
+    """ Create new user
+
+    Input user profile and login new user
+
+    Return:
+        Route to stores
+    """
+    data = request.form
+
+    user = User()
+
+    # Test whether email already exists
+
+    # Test whether new password is provided
+    if data["password-new"] and data["password-new2"]:
+        # Test whether new password entry matches
+        if data["password-new"] == data["password-new2"]:
+            # Update password
+            user.password = generate_password_hash(data["password-new"])
+        else:
+            flash("New passwords do not match", "danger")
+            return redirect(url_for("profile_get"))
+
+    # Update other user attributes
+    user.name = data["name"]
+    user.email = data["email"]
+
+    session.add(user)
+    session.commit()
+
+    login_user(user)
+    flash("Successfully created user profile", "success")
+    return redirect(url_for("stores"))
+
+
+@app.route("/profile/<int:id>", methods=["PUT", "POST"])
+def profile_put(id):
+    """ Edit existing user profile
+
+    Return:
+        Refresh profile page
+    """
+    data = request.form
+
+    user = session.query(User).get(id)
+
+    if not user:
+        flash("Could not find user with id {}".format(id), "danger")
+        return redirect(url_for("index"))
+
+    # Test current password match
+    if not check_password_hash(user.password, data["password-current"]):
+        flash("Current password is incorrect", "danger")
+        return redirect(url_for("profile_get"))
+
+    # Test whether new password is provided
+    if data["password-new"] and data["password-new2"]:
+        # Test whether new password entry matches
+        if data["password-new"] == data["password-new2"]:
+            # Update password
+            user.password = generate_password_hash(data["password-new"])
+        else:
+            flash("New passwords do not match", "danger")
+            return redirect(url_for("profile_get"))
+
+    # Update other user attributes
+    user.name = data["name"]
+    user.email = data["email"]
+
+    session.commit()
+
+    flash("Successfully updated user profile", "success")
+    return redirect(url_for("profile_get"))
 
 
 @app.route("/stores")
