@@ -1,11 +1,15 @@
 
 ### My additions
+
 # PyCharm
 .idea/
+
 # Bower
 .bowerrc
 grocery_list/static/bower
 
+#Other
+grocery_list/templates/archive
 
 ### Python template
 # Byte-compiled / optimized / DLL files
