@@ -57,7 +57,6 @@ class Store(Base):
     state = Column(String(2))
     postal_code = Column(String(10))
     country = Column(String(50))
-    default = Column(Boolean, default=False)
 
     user = relationship("UserStore", backref="store")
     route = relationship("Route", backref="store")
@@ -78,6 +77,7 @@ class UserStore(Base):
     user_id = Column(Integer, ForeignKey("user.id"), primary_key=True)
     store_id = Column(Integer, ForeignKey("store.id"), primary_key=True)
     nickname = Column(String(50))
+    default = Column(Boolean, default=False)
 
 
 class Route(Base):

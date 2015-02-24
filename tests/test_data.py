@@ -21,8 +21,8 @@ def add_store():
 
     Associated with test User from setUp
     """
-    store1 = Store(name="Test Store", default=True)
-    store2 = Store(name="Other Store", default=False)
+    store1 = Store(name="Test Store")
+    store2 = Store(name="Other Store")
 
     session.add_all([store1, store2])
     session.commit()
@@ -41,11 +41,13 @@ def add_user_store():
 
     user_store1 = UserStore(user_id=1,
                            store_id=1,
-                           nickname="My Test Store"
+                           nickname="My Test Store",
+                           default=True
     )
     user_store2 = UserStore(user_id=1,
                            store_id=2,
-                           nickname="My Other Store"
+                           nickname="My Other Store",
+                           default=False
     )
 
     session.add_all([user_store1, user_store2])
