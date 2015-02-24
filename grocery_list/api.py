@@ -54,7 +54,7 @@ def user_profile_get(id):
     if type(user) == Response:
         return user
 
-    data = json.dumps(user.as_dict(["password"]))
+    data = json.dumps(user.as_dict_base(["password"]))
     return Response(data, 200, mimetype="application/json")
 
 @app.route("/api/user/profile", methods=["POST"])
@@ -77,7 +77,7 @@ def user_profile_post():
     headers = {"Location": url_for("user_profile_get", id=user.id)}
     message = "Successfully created user profile"
 
-    data_dict = user.as_dict(["password"])
+    data_dict = user.as_dict_base(["password"])
     data_dict.update({"message":message})
     data_json = json.dumps(data_dict)
 

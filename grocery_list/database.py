@@ -10,7 +10,7 @@ from . import app
 class Base(object):
     """ Extend SQLAlchemy Base object """
 
-    def as_dict(self, excluded_columns = []):
+    def as_dict_base(self, excluded_columns = []):
         """ Convert model data into dictionary
 
         Args:
