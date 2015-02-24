@@ -107,6 +107,7 @@ class Route(Base):
     store = relationship("Store",
                          secondary="route_store",
                          backref="route")
+    item_group = relationship("RouteGroup", backref="route")
     list = relationship("List", backref="route")
 
 
