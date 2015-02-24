@@ -3,5 +3,69 @@
 
     <h2>Stores</h2>
 
+    <div class="container row">
+        <div id="stores-list-container" class="col-md-3">
+            <div id="stores-list list-group">
+                {% for store in stores %}
+                    <a class="list-group-item" href="/stores/{{ store.store_id }}">{{ store.nickname }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="store-detail-container" class="col-md-8">
+            <div id="store-detail-form">
+                {% if store %}
+                    <form name="store-detail" class="form-horizontal" id="store-detail" method={% if not store.store_id %}"post"{% else %}"post"{% endif %}
+                    action={% if not store.store_id %}"/stores/new"{% else %}"/stores/{{ store.store_id }}"{% endif %} >
+
+                        <label for="store.name" class="col-md-2 control-label">Name</label>
+                        <div class="form-group">
+                            <div class="col-md-6"><input type="text" id="store.name" name="store.name" class="form-control" value="{{ store.store.name }}"></div>
+                        </div>
+
+                        <label for="nickname" class="col-md-2 control-label">Nickname</label>
+                        <div class="form-group">
+                            <div class="col-md-6"><input type="text" id="nickname" name="nickname" class="form-control" value="{{ store.nickname }}"></div>
+                        </div>
+
+                        <label for="store.street_address" class="col-md-2 control-label">Street Address</label>
+                        <div class="form-group">
+                            <div class="col-md-6"><input type="text" id="store.street_address" name="store.street_address" class="form-control" value="{{ store.store.street_address }}"></div>
+                        </div>
+
+                        <label for="store.city" class="col-md-2 control-label">City</label>
+                        <div class="form-group">
+                            <div class="col-md-6"><input type="text" id="store.city" name="store.city" class="form-control" value="{{ store.store.city }}"></div>
+                        </div>
+
+                        <label for="store.state" class="col-md-2 control-label">State</label>
+                        <div class="form-group">
+                            <div class="col-md-6"><input type="text" id="store.state" name="store.state" class="form-control" value="{{ store.store.state }}"></div>
+                        </div>
+
+                        <label for="store.postal_code" class="col-md-2 control-label">Zip Code</label>
+                        <div class="form-group">
+                            <div class="col-md-6"><input type="text" id="store.postal_code" name="store.postal_code" class="form-control" value="{{ store.store.postal_code }}"></div>
+                        </div>
+
+                        <label for="store.country" class="col-md-2 control-label">Country</label>
+                        <div class="form-group">
+                            <div class="col-md-6"><input type="text" id="store.country" name="store.country" class="form-control" value="{{ store.store.country }}"></div>
+                        </div>
+
+                        <label for="store.default" class="col-md-2 control-label">Default</label>
+                        <div class="form-group">
+                            <div class="col-md-2"><input type="checkbox" id="store.default" name="default" class="form-control" {% if store.store.default %}checked{% endif %}></div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-6">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

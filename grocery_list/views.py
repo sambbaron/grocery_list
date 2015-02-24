@@ -3,6 +3,7 @@
 from flask import render_template, redirect, url_for, request, abort
 from flask.ext.login import current_user, login_user, logout_user, flash, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy import update, select
 
 from . import app
 from .database import session
@@ -28,7 +29,7 @@ def index():
         return redirect(url_for("routes"))
     # Else redirect to Stores
     else:
-        return redirect(url_for("stores"))
+        return redirect(url_for("stores_get"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -160,10 +161,77 @@ def profile_put(id):
     return redirect(url_for("profile_get"))
 
 
-@app.route("/stores")
+@app.route("/stores", methods=["GET"])
+@app.route("/stores/<int:id>", methods=["GET"])
 @login_required
-def stores():
-    return render_template("stores.html")
+def stores_get(id=0):
+    """ Retrieve all stores or single store
+
+    All stores for list, single store for detail
+
+    Return:
+        stores template
+    """
+    # Retrieve all stores for current user
+    stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()).all()
+
+    if id != 0:
+        # Retrieve single selected store
+        user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
+                                                     UserStore.store_id == id).first()
+        # Test whether store exists
+        if user_store is None:
+            flash("Could not find store with id {}".format(UserStore.store_id),"danger")
+            return redirect(url_for("stores_get"))
+    else:
+        user_store = False
+
+    return render_template("stores.html", stores=stores, store=user_store)
+
+
+@app.route("/stores/<int:id>", methods=["PUT", "POST"])
+def store_put(id):
+    """ Edit existing store
+
+    Return:
+        Refresh store page
+    """
+    # Return form data
+    data = request.form
+    # Set UserStore record
+    user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
+                                                     UserStore.store_id == id).first()
+    # Test whether UserStore record exists
+    if not user_store:
+        flash("Could not find store with id {}".format(UserStore.store_id),"danger")
+        return redirect(url_for("stores_get"))
+
+    # Set table objects for SQL update
+    user_store_tbl = UserStore.__table__
+    store_tbl = Store.__table__
+
+    # Create dictionaries with data for UserStore and Store
+    user_store_dict = {}
+    store_dict = {}
+    for key,value in data.items():
+        key_part = key.partition(".")
+        if key_part[0] == "store":
+            store_dict.update({key_part[2]:value})
+        else:
+            user_store_dict.update({key_part[0]:value})
+
+    # Update UserStore table
+    stmt = user_store_tbl.update().values(user_store_dict).where(user_store_tbl.c.store_id == store_tbl.c.id)\
+        .where(user_store_tbl.c.user_id == int(current_user.get_id())).where(user_store_tbl.c.store_id == id)
+    engine.execute(stmt)
+
+    # Update Store table
+    stmt = store_tbl.update().values(store_dict).where(user_store_tbl.c.store_id == store_tbl.c.id)\
+        .where(user_store_tbl.c.user_id == int(current_user.get_id())).where(user_store_tbl.c.store_id == id)
+    engine.execute(stmt)
+
+    flash("Successfully updated store", "success")
+    return redirect("{}/{}".format(url_for("stores_get"), id))
 
 
 @app.route("/routes")
