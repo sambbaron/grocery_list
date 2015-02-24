@@ -12,6 +12,8 @@ def add_all():
     add_store()
     add_user_store()
     add_route()
+    add_item_group()
+    add_route_group()
     add_list()
 
 def add_user():
@@ -90,6 +92,35 @@ def add_route():
     session.add_all([route1, route2])
     session.commit()
 
+
+def add_item_group():
+    """ Add Test Item Groups """
+
+    item_groups = ["vegetables", "fruits", "herbs", "dairy/eggs", "meat", "sundry", "international",
+                   "frozen", "bulk", "baking", "spices", "prepared foods", "gourmet", "alcohol",
+                   "paper/kitchen", "cleaning", "toiletries"]
+
+    for item_group in item_groups:
+        session.add(ItemGroup(name=item_group))
+
+    session.commit()
+
+def add_route_group():
+    """ Add Test Route Group
+
+    With Item Groups
+    """
+    # Check for test Route
+    if session.query(Route).get(1) is None:
+        add_route()
+    if session.query(ItemGroup).get(1) is None:
+        add_item_group()
+
+    # Add first five Item Groups to test Route
+    for n in range(1, 6):
+        session.add(RouteGroup(route_id=1, item_group_id=n, route_order=n))
+
+    session.commit()
 
 def add_list():
     """ Add Test List
