@@ -6,6 +6,15 @@ from grocery_list.models import *
 from grocery_list.database import session
 
 
+def add_all():
+    """ Add all test data """
+    add_user()
+    add_store()
+    add_user_store()
+    add_route()
+    # add_route_store()  TODO problem with this
+    add_list()
+
 def add_user():
     """ Add Test User """
     user = User(name="Testy",
@@ -78,26 +87,26 @@ def add_route():
     session.commit()
 
 
-# def add_route_store():
-#     """ Add Test RouteStore association
-#
-#     Associated with test Route and Store
-#     """
-#     # Check for test User and Store
-#     if session.query(Route).get(1) is None:
-#         add_route()
-#     if session.query(Store).get(1) is None:
-#         add_store()
-#
-#     route_store1 = RouteStore(route_id=1,
-#                            store_id=1
-#     )
-#     route_store2 = RouteStore(route_id=2,
-#                            store_id=1
-#     )
-#
-#     session.add_all([route_store1, route_store2])
-#     session.commit()
+def add_route_store():
+    """ Add Test RouteStore association
+
+    Associated with test Route and Store
+    """
+    # Check for test User and Store
+    if session.query(Route).get(1) is None:
+        add_route()
+    if session.query(Store).get(1) is None:
+        add_store()
+
+    route_store1 = route_store_table(route_id=1,
+                           store_id=1
+    )
+    route_store2 = route_store_table(route_id=2,
+                           store_id=1
+    )
+
+    session.add_all([route_store1, route_store2])
+    session.commit()
 
 
 def add_list():
