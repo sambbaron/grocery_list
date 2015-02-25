@@ -27,7 +27,7 @@
 
                     <label for="nickname" class="col-md-2 control-label">Nickname</label>
                     <div class="form-group">
-                        <div class="col-md-6"><input type="text" id="nickname" name="UserStore.{{ current_user.get_id() }},{{ store.store_id }}.nickname" class="form-control"
+                        <div class="col-md-6"><input type="text" id="nickname" name="UserStore.{{ store.user_id }} {{ store.store_id }}.nickname" class="form-control"
                                                      value="{% if store != "new" %}{{ store.nickname }}{% endif %}"></div>
                     </div>
 
