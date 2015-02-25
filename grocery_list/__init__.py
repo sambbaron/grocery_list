@@ -13,6 +13,7 @@ app.config.from_object(config_path)
 # Import api and views
 from . import api
 from . import views
+from . import utils
 
 # Database initialization
 from .database import Base, engine

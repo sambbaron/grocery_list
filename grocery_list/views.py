@@ -8,6 +8,7 @@ from sqlalchemy import update, select
 from . import app
 from .database import session
 from .models import *
+from utils import update_form_data
 
 @app.route("/")
 def index():
@@ -244,29 +245,10 @@ def store_put(id):
         flash("Could not find store with id {} for current user".format(UserStore.store_id),"danger")
         return redirect(url_for("store_get"))
 
-    # Set table objects for SQL update
-    user_store_tbl = UserStore.__table__
-    store_tbl = Store.__table__
-
-    # Create dictionaries with data for UserStore and Store
-    user_store_dict = {}
-    store_dict = {}
-    for key,value in data.items():
-        key_part = key.partition(".")
-        if key_part[0] == "store":
-            store_dict.update({key_part[2]:value})
-        else:
-            user_store_dict.update({key_part[0]:value})
-
-    # Update UserStore table
-    stmt = user_store_tbl.update().values(user_store_dict).where(user_store_tbl.c.store_id == store_tbl.c.id)\
-        .where(user_store_tbl.c.user_id == int(current_user.get_id())).where(user_store_tbl.c.store_id == id)
-    engine.execute(stmt)
-
-    # Update Store table
-    stmt = store_tbl.update().values(store_dict).where(user_store_tbl.c.store_id == store_tbl.c.id)\
-        .where(user_store_tbl.c.user_id == int(current_user.get_id())).where(user_store_tbl.c.store_id == id)
-    engine.execute(stmt)
+    # Update data
+    if not update_form_data(data):
+        flash("Server error in updating store", "danger")
+        return redirect(request.url)
 
     flash("Successfully updated store", "success")
     return redirect(request.url)
@@ -390,15 +372,9 @@ def route_put(store_id, route_id):
         return redirect(url_for("route_get"))
 
     # Update data
-    for key, value in data.items():
-        # Use form name string: ModelClass.ID.ColumnName
-        param = str(key).split(".", 2)
-        # Set model class
-        model = globals()[param[0]]
-        row = session.query(model).get(param[1])
-        setattr(row, param[2], value)
-
-    session.commit()
+    if not update_form_data(data):
+        flash("Server error in updating route", "danger")
+        return redirect(request.url)
 
     flash("Successfully updated route", "success")
     return redirect(request.url)
