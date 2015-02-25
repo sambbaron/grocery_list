@@ -206,11 +206,12 @@ def store_post():
     """ Create new store
 
     Add store record and associate with current user
-    Data added with put method
 
     Return:
-        Store put method to update data to new record
+        Store page
     """
+    data = request.form
+
     # Create new Store
     store = Store(name="New Store")
     session.add(store)
@@ -218,14 +219,18 @@ def store_post():
 
     # Associate new Store with current User
     user_store = UserStore(store_id = store.id,
-                           user_id = int(current_user.get_id())
+                           user_id = current_user.get_id()
     )
     session.add(user_store)
     session.commit()
 
-    # Put form data to new Store
-    return store_put(store.id)
+    # Update data in new record
+    if not update_form_data(data, Store=store.id, UserStore=(user_store.user_id, user_store.store_id)):
+        flash("Server error in creating store", "danger")
+        return redirect(request.url)
 
+    flash("Successfully created store", "success")
+    return redirect(request.url)
 
 @app.route("/stores/<int:id>", methods=["PUT", "POST"])
 @login_required
