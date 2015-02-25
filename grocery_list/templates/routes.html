@@ -45,9 +45,9 @@
                                     <tr>
 {#                                        <td><input type="text" name="RouteGroup.{{ route_group.id }}.item_group.name" class="form-control" value="{{ route_group.item_group.name }}"></td>#}
                                         <td>
-                                            <select name="RouteGroup.{{ route_group.id }}.item_group.name"  class="form-control">
+                                            <select name="RouteGroup.{{ route_group.id }}.item_group_id"  class="form-control">
                                                 {% for item_group in item_groups %}
-                                                    <option value="ItemGroup.{{ item_group.id }}.id"
+                                                    <option value="{{ item_group.id }}"
                                                             {% if route_group.item_group.id == item_group.id %}selected{% endif %}>{{ item_group.name }}
                                                     </option>
                                                 {% endfor %}
