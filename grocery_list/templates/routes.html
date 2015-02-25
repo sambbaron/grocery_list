@@ -19,7 +19,7 @@
                 {% endfor %}
             </div>
             <br>
-            <a href="/stores/{{ store.id }}/routes/new"><button class="btn btn-warning center-block">New Route</button></a>
+            <a href="/stores/{{ store.id }}/routes/new"><button type="button" class="btn btn-warning center-block">New Route</button></a>
         </div>
         <div id="route-detail-container" class="col-md-5">
             {% if route != "empty" %}
@@ -54,11 +54,11 @@
                                             </select>
                                         </td>
                                         <td><input type="text" name="RouteGroup.{{ route_group.id }}.route_order" class="form-control text-center" value="{{ route_group.route_order }}"></td>
-                                        <td><a href="/routegroup/{{ route_group.id }}/delete"><button class="btn btn-danger btn-sm center-block">Delete Group</button></a></td>
+                                        <td><a href="/routegroups/{{ route_group.id }}/delete"><button type="button" class="btn btn-danger btn-sm center-block">Delete Group</button></a></td>
                                     </tr>
                                 {% endfor %}
                             </table>
-                            <a href="/routes/{{ route.id }}/routegroup/new"><button class="btn btn-danger btn-sm">New Group</button></a>
+                            <a href="/routes/{{ route.id }}/routegroups/new"><button type="button" class="btn btn-danger btn-sm">New Group</button></a>
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-8">
