@@ -266,14 +266,139 @@ def store_put(id):
     engine.execute(stmt)
 
     flash("Successfully updated store", "success")
-    return redirect("{}/{}".format(url_for("store_get"), id))
+    return redirect(request.url)
 
 # TODO: Default value not passing through form
 
-@app.route("/routes")
+
+@app.route("/routes", methods=["GET"])
+@app.route("/stores/<int:store_id>/routes/new", methods=["GET"])
+@app.route("/stores/<int:store_id>/routes/<int:route_id>", methods=["GET"])
+@app.route("/stores/<int:store_id>/routes", methods=["GET"])
 @login_required
-def routes():
-    return render_template("routes.html")
+def route_get(store_id=None, route_id=None):
+    """ Retrieve all routes list and single route detail form
+
+    Retrieve all stores associated with route
+
+    Return:
+        New route: Empty route detail form
+        Single route: route detail form for single route
+        All routes: All route list with empty route detail form
+    """
+    # Retrieve all Stores for current User
+    stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()).all()
+
+    # If no Stores, then redirect to Stores page
+    if not stores:
+        flash("You do not have any stores setup. Please setup a store first.", "warning")
+        return redirect(url_for("store_get"))
+
+    # If no selected Store or Route, set to first Store
+    if not store_id and not route_id:
+        store_id = session.query(UserStore.user_id).filter(UserStore.user_id == current_user.get_id()).first()
+
+    # Set selected Store
+    store = session.query(Store).get(store_id)
+
+    # Retrieve all routes for current User and selected Store
+    routes = session.query(Route).filter(Route.user_id == current_user.get_id(), Route.store.contains(store)).all()
+
+    # Create Route Groups dictionary
+    route_groups = {}
+
+    # Single Route provided
+    if route_id is not None:
+        # Retrieve single selected Route and related Item Groups ordered by Route Order
+        route = session.query(Route).get(route_id)
+        route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == route_id).order_by(RouteGroup.route_order)
+
+        # Test whether Route exists
+        if route is None:
+            flash("Could not find route with id {}".format(route.route_id),"danger")
+            return redirect(url_for("route_get"))
+    # New Route requested
+    elif request.path.find("/routes/new") > -1:
+        # Set as new Route entry
+        route = "new"
+    else:
+        # Set as no Route entry
+        route = "empty"
+
+    # Create Item Groups list for selection
+    item_groups = session.query(ItemGroup).all()
+
+    return render_template("routes.html", stores=stores, store=store,
+                           routes=routes, route=route,
+                           route_groups=route_groups, item_groups=item_groups
+    )
+
+
+@app.route("/stores/<int:store_id>/routes/new", methods=["POST"])
+@login_required
+def route_post(store_id):
+    """ Create new Route
+
+    Associate new Route with Store
+
+    Return:
+        Route put method to update data to new record
+    """
+    data = request.form
+
+    # Set Store object
+    store = session.query(Store).get(store_id)
+
+    # Create new Route
+    route = Route(user_id=current_user.get_id(),
+                  store=[store]
+    )
+
+    # Update data
+    for key, value in data.items():
+        # Use form name string: ModelClass.ID.ColumnName
+        param = str(key).split(".", 2)
+        if param[0] == "Route":
+            setattr(route, param[2], value)
+
+    session.add(route)
+    session.commit()
+
+    # Put form data to new Store
+    return redirect(url_for("route_get"))
+
+
+@app.route("/stores/<int:store_id>/routes/<int:route_id>", methods=["PUT", "POST"])
+@login_required
+def route_put(store_id, route_id):
+    """ Edit existing Route
+
+    Return:
+        Single Route page
+    """
+    # Return form data
+    data = request.form
+    # Set Route record
+    route = session.query(Route).get(route_id)
+
+    # Test whether Route record exists
+    if not route:
+        flash("Could not find route with id {}".format(route_id),"danger")
+        return redirect(url_for("route_get"))
+
+    # Update data
+    for key, value in data.items():
+        # Use form name string: ModelClass.ID.ColumnName
+        param = str(key).split(".", 2)
+        # Set model class
+        model = globals()[param[0]]
+        row = session.query(model).get(param[1])
+        setattr(row, param[2], value)
+
+    session.commit()
+
+    flash("Successfully updated route", "success")
+    return redirect(request.url)
 
 
 @app.route("/lists")
