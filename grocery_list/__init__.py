@@ -10,7 +10,8 @@ app = Flask(__name__)
 config_path = os.environ.get("CONFIG_PATH", "grocery_list.config.DevelopmentConfig")
 app.config.from_object(config_path)
 
-# Import api and views
+# Import modules
+from . import login
 from . import api
 from . import views
 from . import utils
@@ -18,6 +19,3 @@ from . import utils
 # Database initialization
 from .database import Base, engine
 Base.metadata.create_all(engine)
-
-# Import Flask-Login LoginManager
-from . import login
