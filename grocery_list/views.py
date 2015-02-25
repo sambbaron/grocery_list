@@ -8,7 +8,7 @@ from sqlalchemy import update, select
 from . import app
 from .database import session
 from .models import *
-from utils import update_form_data
+from .utils import update_form_data
 
 @app.route("/")
 def index():

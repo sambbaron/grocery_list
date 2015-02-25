@@ -1,8 +1,8 @@
 """ Custom Utility Functions """
 
-from grocery_list import app
-from grocery_list.database import session
-from grocery_list import models
+from . import app
+from .database import session
+from . import models
 
 
 def update_form_data(data):
