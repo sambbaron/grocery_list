@@ -45,7 +45,7 @@ def login():
         if user and check_password_hash(user.password, password):
             # Successful login
             login_user(user)
-            flash("Logged in successfully.")
+            flash("Logged in successfully.", "success")
             return redirect(request.args.get("next") or url_for("index"))
         else:
             # Unsuccessful login
@@ -53,7 +53,10 @@ def login():
             return redirect(url_for("login"))
 
     # GET request
-    return render_template("login.html")
+    if current_user.is_anonymous() == True:
+        return render_template("login.html")
+    else:
+        return redirect(url_for("index"))
 
 
 @app.route("/logout")
