@@ -8,7 +8,7 @@ from sqlalchemy import update, select
 from . import app
 from .database import session
 from .models import *
-from .utils import update_form_data
+from .utils import update_from_form
 
 @app.route("/")
 def index():
@@ -225,7 +225,7 @@ def store_post():
     session.commit()
 
     # Update data in new record
-    if not update_form_data(data, Store=store.id, UserStore=(user_store.user_id, user_store.store_id)):
+    if not update_from_form(data, Store=store.id, UserStore=(user_store.user_id, user_store.store_id)):
         flash("Server error in creating store", "danger")
         return redirect(request.url)
 
@@ -251,7 +251,7 @@ def store_put(id):
         return redirect(url_for("store_get"))
 
     # Update data
-    if not update_form_data(data):
+    if not update_from_form(data):
         flash("Server error in updating store", "danger")
         return redirect(request.url)
 
@@ -344,12 +344,7 @@ def route_post(store_id):
                   store=[store]
     )
 
-    # Update data
-    for key, value in data.items():
-        # Use form name string: ModelClass.ID.ColumnName
-        param = str(key).split(".", 2)
-        if param[0] == "Route":
-            setattr(route, param[2], value)
+    # TODO Add function to post data
 
     session.add(route)
     session.commit()
@@ -377,7 +372,7 @@ def route_put(store_id, route_id):
         return redirect(url_for("route_get"))
 
     # Update data
-    if not update_form_data(data):
+    if not update_from_form(data):
         flash("Server error in updating route", "danger")
         return redirect(request.url)
 

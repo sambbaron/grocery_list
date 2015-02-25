@@ -4,7 +4,7 @@ from .database import session
 from . import models
 
 
-def update_form_data(data, **new_primary_keys):
+def update_from_form(data, **new_primary_keys):
     """ Create/Update SQLAlchemy model data with HTML form data
 
     If primary_key not provided in dictionary key, then assume
