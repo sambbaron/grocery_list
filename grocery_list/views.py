@@ -340,17 +340,21 @@ def route_post(store_id):
     store = session.query(Store).get(store_id)
 
     # Create new Route
-    route = Route(user_id=current_user.get_id(),
+    route = Route(name="New Route",
+                  user_id=current_user.get_id(),
                   store=[store]
     )
-
-    # TODO Add function to post data
 
     session.add(route)
     session.commit()
 
-    # Put form data to new Store
-    return redirect(url_for("route_get"))
+    # Update data in new record
+    if not update_from_form(data, Route=route.id):
+        flash("Server error in creating route", "danger")
+        return redirect(request.url)
+
+    flash("Successfully created route", "success")
+    return redirect(request.url)
 
 
 @app.route("/stores/<int:store_id>/routes/<int:route_id>", methods=["PUT", "POST"])
