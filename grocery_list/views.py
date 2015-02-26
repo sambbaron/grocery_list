@@ -177,7 +177,8 @@ def store_get(store_id=None):
         All Stores: All store list with empty store detail form
     """
     # Retrieve all stores for current user
-    stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()).all()
+    stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id())\
+        .order_by(UserStore.store_id).all()
 
     # If no Store, select first store associated with current user
     if not store_id:
@@ -281,7 +282,8 @@ def route_get(store_id=None, route_id=None):
         All routes: All route list with empty route detail form
     """
     # Retrieve all Stores for current User
-    stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()).all()
+    stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id())\
+        .order_by(UserStore.store_id).all()
 
     # If no Stores, then redirect to Stores page
     if not stores:
