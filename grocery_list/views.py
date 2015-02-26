@@ -426,7 +426,75 @@ def route_group_delete(route_id, route_group_id):
     return route_get(route_id=route_id)
 
 
-@app.route("/lists")
+@app.route("/lists", methods=["GET"])
+@app.route("/stores/<int:store_id>/lists/new", methods=["GET"])
+@app.route("/stores/<int:store_id>/lists/<list_id>", methods=["GET"])
+@app.route("/stores/<int:store_id>/lists", methods=["GET"])
 @login_required
-def lists():
-    return render_template("lists.html")
+def list_get(store_id=None, list_id=None):
+    """ Retrieve all Lists and single List detail form
+
+    Retrieve all Lists associated with Store
+
+    Return:
+        lists.html template
+    """
+    # Set all Stores for current User
+    stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()) \
+        .order_by(UserStore.store_id).all()
+
+    # If no Stores, then redirect to Stores page
+    if not stores:
+        flash("You do not have any stores setup. Please setup a store first.", "warning")
+        return redirect(url_for("store_get"))
+
+    # Set selected Store
+    # If no selected Store or List, set to first Store for user
+    if not store_id and not list_id:
+        store_id = session.query(UserStore.store_id).filter(UserStore.user_id == current_user.get_id())\
+            .order_by(UserStore.store_id).first()
+        store = session.query(Store).get(store_id)
+    # If List provided, but no Store, lookup Store associated with List
+    elif list_id and not store_id:
+        store = session.query(Store).filter(Store.list.contains(session.query(List).get(list_id))).first()
+    else:
+        # Set Store object using provided id
+        store = session.query(Store).get(store_id)
+
+    # Set all Lists for current User and selected Store
+    lists = session.query(List).filter(List.user_id == current_user.get_id(), List.store == store)\
+        .order_by(List.id).all()
+
+    # Set selected List
+    # New List requested
+    if request.path.find("/lists/new") > -1:
+        # Set as new List entry
+        list = "new"
+    # If Store provided, but no List, lookup first List associated with Store
+    elif store_id and not list_id:
+        list = session.query(List).filter(List.user_id == current_user.get_id(), List.store == store)\
+            .order_by(List.id).first()
+    else:
+        # Set List object using provided id
+        list = session.query(List).get(list_id)
+
+    # Set List Items
+    list_items = {}
+    if list and list != "new":
+        # Retrieve related Item Groups ordered by List Order
+        list_items = list.list_item
+
+    # Set Item Measurements for form input selection
+    item_measurements = session.query(ItemMeasurements).order_by(ItemMeasurements.id).all()
+
+    # Set Route Groups list for form input selection
+    route_groups = {}
+    if list.route_id:
+        route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id)\
+            .order_by(RouteGroup.route_order).all()
+
+    return render_template("lists.html", stores=stores, store=store,
+                           lists=lists, list=list,
+                           list_items=list_items,
+                           route_groups=route_groups,
+                           item_measurements=item_measurements)
