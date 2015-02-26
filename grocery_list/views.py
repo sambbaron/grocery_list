@@ -392,6 +392,9 @@ def route_put(store_id, route_id):
         flash("Server error in updating route", "danger")
         return redirect(request.url)
 
+    # Renumber route order to remove duplicates
+    route.renumber_route_order()
+
     flash("Successfully updated route", "success")
     return redirect(request.url)
 

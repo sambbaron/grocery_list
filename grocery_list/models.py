@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 
 from flask.ext.login import UserMixin
 
-from .database import Base, engine
+from .database import Base, session
 
 
 class User(Base, UserMixin):
@@ -109,6 +109,19 @@ class Route(Base):
                          backref="route")
     item_group = relationship("RouteGroup", backref="route")
     list = relationship("List", backref="route")
+
+    def renumber_route_order(self):
+        """ Renumber route order to remove duplicates
+
+        Return:
+            Nothing
+        """
+        i = 1
+        # Loop through Groups in Route
+        for route_group in self.item_group:
+            route_group.route_order = i
+            i += 1
+        return
 
 
 # Routes assigned to Stores
