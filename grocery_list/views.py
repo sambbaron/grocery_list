@@ -399,6 +399,44 @@ def route_put(store_id, route_id):
     return redirect(request.url)
 
 
+@app.route("/routes/<int:route_id>/routegroups/new", methods=["POST"])
+@login_required
+def route_group_post(route_id):
+    """ Add new Route Group to existing Route
+
+    Return:
+        Route page
+    """
+    route_group = RouteGroup(route_id=route_id, route_order=99)
+    session.add(route_group)
+    session.commit()
+
+    flash("Successfully added route group", "success")
+    return route_get(route_id=route_id)
+
+
+@app.route("/routes/<int:route_id>/routegroups/<int:route_group_id>/delete", methods=["POST"])
+@login_required
+def route_group_delete(route_id, route_group_id):
+    """ Delete Route Group from existing Route
+
+    Return:
+        Route page
+    """
+    route_group = session.query(RouteGroup).get(route_group_id)
+
+    # Test whether RouteGroup record exists
+    if not route_group:
+        flash("Could not find route group record with id {}".format(route_group_id),"danger")
+        return route_get(route_id=route_id)
+
+    session.delete(route_group)
+    session.commit()
+
+    flash("Successfully deleted route group", "success")
+    return route_get(route_id=route_id)
+
+
 @app.route("/lists")
 @login_required
 def lists():

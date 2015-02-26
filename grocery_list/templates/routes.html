@@ -23,54 +23,55 @@
         </div>
         <div id="route-detail-container" class="col-md-5">
             {% if route != "empty" %}
-                <form name="route-detail" class="form-horizontal" id="route-detail" method="post"
+                <form name="route-detail" id="route-detail" class="form-horizontal" method="post"
                 action={% if route == "new" %}"/stores/{{ store.id }}/routes/new"{% else %}"/stores/{{ store.id }}/routes/{{ route.id }}"{% endif %} >
 
-                        <div id="route-detail-header">
-                            <label for="route.name" class="col-md-2 control-label">Name</label>
-                            <div class="form-group">
-                                <div class="col-md-7"><input type="text" id="route.name" name="Route.{{ route.id }}.name" class="form-control"
-                                                             value="{% if route != "new" %}{{ route.name }}{% endif %}"></div>
-                            </div>
-                        </div>
-                        <br>
-                        <div id="route-detail-itemgroups">
-                            <table class="table table-bordered table-condensed">
-                                <tr>
-                                    <th class="col-md-6 text-center">Group Name</th>
-                                    <th class="col-md-1 text-center">Sort Order</th>
-                                    <th></th>
-                                </tr>
-                                {% for route_group in route_groups %}
-                                    <tr>
-{#                                        <td><input type="text" name="RouteGroup.{{ route_group.id }}.item_group.name" class="form-control" value="{{ route_group.item_group.name }}"></td>#}
-                                        <td>
-                                            <select name="RouteGroup.{{ route_group.id }}.item_group_id"  class="form-control">
-                                                {% for item_group in item_groups %}
-                                                    <option value="{{ item_group.id }}"
-                                                            {% if route_group.item_group.id == item_group.id %}selected{% endif %}>{{ item_group.name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </td>
-                                        <td><input type="text" name="RouteGroup.{{ route_group.id }}.route_order" class="form-control text-center" value="{{ route_group.route_order }}"></td>
-                                        <td><a href="/routegroups/{{ route_group.id }}/delete"><button type="button" class="btn btn-danger btn-sm center-block">Delete Group</button></a></td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                            <a href="/routes/{{ route.id }}/routegroups/new"><button type="button" class="btn btn-danger btn-sm">New Group</button></a>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-8">
-                                <button type="submit" class="btn btn-primary center-block">Submit</button>
-                            </div>
-                        </div>
+                    <label for="route.name" class="col-md-2 control-label">Name</label>
+                    <div class="form-group">
+                        <div class="col-md-7"><input type="text" id="route.name" name="Route.{{ route.id }}.name" class="form-control"
+                                                     value="{% if route != "new" %}{{ route.name }}{% endif %}"></div>
+                    </div>
 
-                 </form>
+                </form>
+                <br>
+                <div id="route-detail-itemgroups">
+                    <table class="table table-bordered table-condensed">
+                        <tr>
+                            <th class="col-md-6 text-center">Group Name</th>
+                            <th class="col-md-2 text-center">Sort Order</th>
+                            <th></th>
+                        </tr>
+                        {% for route_group in route_groups %}
+                            <tr>
+                                <td>
+                                    <select name="RouteGroup.{{ route_group.id }}.item_group_id" form="route-detail"  class="form-control">
+                                        {% for item_group in item_groups %}
+                                            <option value="{{ item_group.id }}"
+                                                    {% if route_group.item_group.id == item_group.id %}selected{% endif %}>{{ item_group.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td><input type="text" name="RouteGroup.{{ route_group.id }}.route_order" form="route-detail" class="form-control text-center"
+                                           value="{{ route_group.route_order }}"></td>
+                                <form name="routegroup-delete" id="routegroup-delete" method="post"
+                                      action="/routes/{{ route.id }}/routegroups/{{ route_group.id }}/delete">
+                                    <td><button type="submit" class="btn btn-danger btn-sm center-block">Delete Group</button></td>
+                                </form>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <form name="routegroup-add" id="routegroup-add" method="post" action="/routes/{{ route.id }}/routegroups/new">
+                        <button type="submit" class="btn btn-danger btn-sm">New Group</button>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-8">
+                        <button type="submit" form="route-detail" class="btn btn-primary center-block">Submit</button>
+                    </div>
+                </div>
             {% endif %}
         </div>
     </div>
-
-
 
 {% endblock %}
