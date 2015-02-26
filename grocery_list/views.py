@@ -176,33 +176,25 @@ def store_get(store_id=None):
         Single Store: Store detail form for single store
         All Stores: All store list with empty store detail form
     """
-    # Retrieve all stores for current user
+    # Set all Stores for current User
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id())\
         .order_by(UserStore.store_id).all()
 
+    # Set selected Store
+    # New Store requested
+    if request.path.find("/stores/new") > -1:
+        # Set as new Store entry
+        store = "new"
     # If no Store, select first store associated with current user
-    if not store_id:
-        store_id = session.query(UserStore.store_id).filter(UserStore.user_id == current_user.get_id()).first()
-
-
-    # Single store provided
-    if store_id is not None:
-        # Retrieve single selected store
-        user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
-                                                     UserStore.store_id == store_id).first()
-        # Test whether store exists
-        if user_store is None:
-            flash("Could not find store with id {}".format(UserStore.store_id), "danger")
-            return redirect(url_for("store_get"))
-    # New store requested
-    elif request.path == "/stores/new":
-        # Set as new store entry
-        user_store = "new"
+    elif not store_id:
+        store_id = session.query(UserStore.store_id).filter(UserStore.user_id == current_user.get_id())\
+            .order_by(UserStore.store_id).first()
+        store = session.query(Store).get(store_id)
     else:
-        # Set as no store entry
-        user_store = "empty"
+        # Set Store object using provided id
+        store = session.query(Store).get(store_id)
 
-    return render_template("stores.html", stores=stores, store=user_store)
+    return render_template("stores.html", stores=stores, store=store)
 
 
 @app.route("/stores/new", methods=["POST"])
@@ -236,6 +228,7 @@ def store_post():
 
     flash("Successfully created store", "success")
     return redirect(request.url)
+
 
 @app.route("/stores/<store_id>", methods=["PUT", "POST"])
 @login_required
@@ -293,7 +286,8 @@ def route_get(store_id=None, route_id=None):
     # Set selected Store
     # If no selected Store or Route, set to first Store for user
     if not store_id and not route_id:
-        store_id = session.query(UserStore.user_id).filter(UserStore.user_id == current_user.get_id()).first()
+        store_id = session.query(UserStore.store_id).filter(UserStore.user_id == current_user.get_id())\
+            .order_by(UserStore.store_id).first()
         store = session.query(Store).get(store_id)
     # If Route provided, but no Store, lookup Store associated with Route
     elif route_id and not store_id:
