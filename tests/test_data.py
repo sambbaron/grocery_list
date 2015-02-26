@@ -15,6 +15,8 @@ def add_all():
     add_item_group()
     add_route_group()
     add_list()
+    add_item_measurement()
+    add_list_item()
 
 
 def add_user():
@@ -146,4 +148,47 @@ def add_list():
                  route_id=1)
 
     session.add_all([list1, list2])
+    session.commit()
+
+
+def add_item_measurement():
+    """ Add Test Item Measurements """
+
+    measurement_name_list = ["pounds", "ounces", "each", "pack", "cans"]
+    measurement_abbrev_list = ["lbs", "oz", "ea", "pack", "can"]
+    for measurement in measurement_name_list:
+        i = measurement_name_list.index(measurement)
+        item_measurement = ItemMeasurements(name=measurement,
+                                            abbreviation=measurement_abbrev_list[i])
+        session.add(item_measurement)
+
+    session.commit()
+
+
+def add_list_item():
+    """ Add Test List Items
+
+    Associated with test List
+    """
+    if session.query(List).get(1) is None:
+        add_list()
+    if session.query(ItemMeasurements).get(1) is None:
+        add_item_measurement()
+    if session.query(ItemGroup).get(1) is None:
+        add_item_group()
+
+    item1 = ListItem(item_name="Onion",
+                     item_notes="Yellow",
+                     item_quantity=3,
+                     list_id=1,
+                     item_measurement_id=3,
+                     item_group_id=1)
+    item2 = ListItem(item_name="Steak",
+                     item_notes="Organic",
+                     item_quantity=1,
+                     list_id=1,
+                     item_measurement_id=1,
+                     item_group_id=5)
+
+    session.add_all([item1, item2])
     session.commit()
