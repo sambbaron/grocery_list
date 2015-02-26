@@ -6,11 +6,7 @@
     <div class="container row">
         <div id="stores-list-container" class="col-md-3">
             <h3 class="text-center">Stores</h3>
-            <div id="stores-list list-group">
-                {% for store in stores %}
-                    <a class="list-group-item" href="/stores/{{ store.store.id }}/routes">{{ store.nickname }}</a>
-                {% endfor %}
-            </div>
+            {% include "stores_list.html" %}
             <br>
             <h3 class="text-center">Routes</h3>
             <div id="routes-list list-group">
