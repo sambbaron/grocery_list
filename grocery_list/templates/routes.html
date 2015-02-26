@@ -22,7 +22,7 @@
             <a href="/stores/{{ store.id }}/routes/new"><button type="button" class="btn btn-warning center-block">New Route</button></a>
         </div>
         <div id="route-detail-container" class="col-md-5">
-            {% if route != "empty" %}
+            {% if route %}
                 <form name="route-detail" id="route-detail" class="form-horizontal" method="post"
                 action={% if route == "new" %}"/stores/{{ store.id }}/routes/new"{% else %}"/stores/{{ store.id }}/routes/{{ route.id }}"{% endif %} >
 

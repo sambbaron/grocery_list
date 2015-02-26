@@ -281,8 +281,8 @@ def route_get(store_id=None, route_id=None):
         Single route: route detail form for single route
         All routes: All route list with empty route detail form
     """
-    # Retrieve all Stores for current User
-    stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id())\
+    # Set all Stores for current User
+    stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()) \
         .order_by(UserStore.store_id).all()
 
     # If no Stores, then redirect to Stores page
@@ -290,49 +290,41 @@ def route_get(store_id=None, route_id=None):
         flash("You do not have any stores setup. Please setup a store first.", "warning")
         return redirect(url_for("store_get"))
 
+    # Set selected Store
     # If no selected Store or Route, set to first Store for user
     if not store_id and not route_id:
         store_id = session.query(UserStore.user_id).filter(UserStore.user_id == current_user.get_id()).first()
-
+        store = session.query(Store).get(store_id)
     # If Route provided, but no Store, lookup Store associated with Route
-    if route_id and not store_id:
+    elif route_id and not store_id:
         store = session.query(Store).filter(Store.route.contains(session.query(Route).get(route_id))).first()
     else:
         # Set Store object using provided id
         store = session.query(Store).get(store_id)
 
+    # Set all Routes for current User and selected Store
+    routes = session.query(Route).filter(Route.user_id == current_user.get_id(), Route.store.contains(store)) \
+        .order_by(Route.id).all()
+
+    # Set selected Route
+    # New Route requested
+    if request.path.find("/routes/new") > -1:
+        # Set as new Route entry
+        route = "new"
     # If Store provided, but no Route, lookup first Route associated with Store
-    if store_id and not route_id:
-        route = session.query(Route).filter(Route.store.contains(store)).first()
+    elif store_id and not route_id:
+        route = session.query(Route).filter(Route.store.contains(store)).order_by(Route.id).first()
     else:
         # Set Route object using provided id
         route = session.query(Route).get(route_id)
 
-    # Retrieve all routes for current User and selected Store
-    routes = session.query(Route).filter(Route.user_id == current_user.get_id(), Route.store.contains(store))\
-        .order_by(Route.id).all()
-
-    # Create Route Groups dictionary
+    # Set Route Groups
     route_groups = {}
-
-    # Single Route provided
-    if route is not None:
+    if not Route and route != "new":
         # Retrieve related Item Groups ordered by Route Order
         route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == route.id).order_by(RouteGroup.route_order)
 
-        # Test whether Route exists
-        if route is None:
-            flash("Could not find route with id {}".format(route.route_id), "danger")
-            return redirect(url_for("route_get"))
-    # New Route requested
-    elif request.path.find("/routes/new") > -1:
-        # Set as new Route entry
-        route = "new"
-    else:
-        # Set as no Route entry
-        route = "empty"
-
-    # Create Item Groups list for selection
+    # Set Item Groups list for form input selection
     item_groups = session.query(ItemGroup).all()
 
     return render_template("routes.html", stores=stores, store=store,
