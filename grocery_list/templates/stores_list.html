@@ -1,7 +1,0 @@
-{# List of Stores #}
-
-<div id="stores-list list-group">
-    {% for store in stores %}
-        <a class="list-group-item" href="/stores/{{ store.store.id }}">{{ store.nickname }}</a>
-    {% endfor %}
-</div>

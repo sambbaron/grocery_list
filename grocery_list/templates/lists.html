@@ -1,10 +1,12 @@
+{% import "macros.html" as macro with context %}
+
 {% extends "base.html" %}
 {% block content %}
 
     <div class="container row">
         <div id="stores-list-container" class="col-md-3">
             <h3 class="text-center">Stores</h3>
-            {% include "stores_list.html" %}
+            {{ macro.stores_list("lists") }}
             <br>
             <h3 class="text-center">Lists</h3>
             <div id="lists-list list-group">

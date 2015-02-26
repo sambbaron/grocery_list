@@ -1,0 +1,9 @@
+
+{# List of Stores #}
+{% macro stores_list(link_endpoint="") -%}
+    <div id="stores-list list-group">
+        {% for store in stores %}
+            <a class="list-group-item" href="/stores/{{ store.store.id }}/{{ link_endpoint }}">{{ store.nickname }}</a>
+        {% endfor %}
+    </div>
+{%- endmacro %}
