@@ -226,7 +226,7 @@ class List(Base):
         Return:
             Combined name
         """
-        date_name = self.shop_date.strftime("%a %b %w")
+        date_name = self.shop_date.strftime("%a %b %d")
         if self.name:
             date_name = "{}: {}".format(date_name, self.name)
 
