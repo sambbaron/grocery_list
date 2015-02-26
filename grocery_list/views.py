@@ -489,7 +489,7 @@ def list_get(store_id=None, list_id=None):
 
     # Set Route Groups list for form input selection
     route_groups = {}
-    if list.route_id:
+    if list and list.route_id:
         route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id)\
             .order_by(RouteGroup.route_order).all()
 
