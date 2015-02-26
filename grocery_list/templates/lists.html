@@ -5,10 +5,10 @@
 
     <div class="container row">
         <div id="stores-list-container" class="col-md-3">
-            <h3 class="text-center">Stores</h3>
+            <h3 class="text-center">Store List</h3>
             {{ macro.stores_list("lists") }}
             <br>
-            <h3 class="text-center">Lists</h3>
+            <h3 class="text-center">Shopping Lists</h3>
             <div id="lists-list list-group">
                 {% for list in lists %}
                     <a class="list-group-item" href="/stores/{{ store.id }}/lists/{{ list.id }}">{{ list.date_name() }}</a>
@@ -19,6 +19,7 @@
         </div>
         <div id="list-detail-container" class="col-md-9">
             {% if list %}
+                <h3 class="text-center">List Detail</h3>
                 <form name="list-detail" id="list-detail" class="" method="post"
                 action={% if list == "new" %}"/stores/{{ store.id }}/lists/new"{% else %}"/stores/{{ store.id }}/lists/{{ list.id }}"{% endif %} >
 
@@ -30,23 +31,23 @@
 
                     <label for="list.name" class="col-md-1 control-label">Name</label>
                     <div class="form-group">
-                        <div class="col-md-4"><input type="text" id="list.name" name="List.{{ list.id }}.name" class="form-control"
+                        <div class="col-md-5"><input type="text" id="list.name" name="List.{{ list.id }}.name" class="form-control"
                                                      value="{% if list != "new" %}{{ list.name }}{% endif %}"></div>
                     </div>
 
                 </form>
                 <br>
                 <div id="list-detail-listitems">
+                    <br>
+                    <br>
+                    <h4 class="text-center">List Items</h4>
                     <table class="table table-bordered table-condensed">
-                        <tr>
-                            <th colspan="6"><h4 class="text-center">List Items</h4></th>
-                        </tr>
                         <tr>
                             <th class="col-md-3 text-center">Item Name</th>
                             <th class="col-md-3 text-center">Detail/Brand</th>
                             <th class="col-md-1 text-center">Quantity</th>
                             <th class="col-md-2 text-center">Measurement</th>
-                            <th class="col-md-4 text-center">Group Name</th>
+                            <th class="col-md-3 text-center">Group Name</th>
                             <th></th>
                         </tr>
                         {% for list_item in list_items %}

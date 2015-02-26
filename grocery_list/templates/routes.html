@@ -3,14 +3,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h2>Routes</h2>
-
     <div class="container row">
         <div id="stores-list-container" class="col-md-3">
-            <h3 class="text-center">Stores</h3>
+            <h3 class="text-center">Store List</h3>
             {{ macro.stores_list("routes") }}
             <br>
-            <h3 class="text-center">Routes</h3>
+            <h3 class="text-center">Route List</h3>
             <div id="routes-list list-group">
                 {% for route in routes %}
                     <a class="list-group-item" href="/stores/{{ store.id }}/routes/{{ route.id }}">{{ route.name }}</a>
@@ -21,6 +19,7 @@
         </div>
         <div id="route-detail-container" class="col-md-5">
             {% if route %}
+                <h3 class="text-center">Route Detail</h3>
                 <form name="route-detail" id="route-detail" class="form-horizontal" method="post"
                 action={% if route == "new" %}"/stores/{{ store.id }}/routes/new"{% else %}"/stores/{{ store.id }}/routes/{{ route.id }}"{% endif %} >
 
@@ -33,6 +32,7 @@
                 </form>
                 <br>
                 <div id="route-detail-itemgroups">
+                    <h4 class="text-center">Item Groups</h4>
                     <table class="table table-bordered table-condensed">
                         <tr>
                             <th class="col-md-6 text-center">Group Name</th>
