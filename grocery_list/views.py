@@ -307,7 +307,8 @@ def route_get(store_id=None, route_id=None):
         route = session.query(Route).get(route_id)
 
     # Retrieve all routes for current User and selected Store
-    routes = session.query(Route).filter(Route.user_id == current_user.get_id(), Route.store.contains(store)).all()
+    routes = session.query(Route).filter(Route.user_id == current_user.get_id(), Route.store.contains(store))\
+        .order_by(Route.id).all()
 
     # Create Route Groups dictionary
     route_groups = {}
