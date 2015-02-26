@@ -59,6 +59,7 @@ class Store(Base):
     country = Column(String(50))
 
     user = relationship("UserStore", backref="store")
+    list = relationship("List", backref="store")
 
 
 class UserStore(Base):
@@ -211,6 +212,7 @@ class List(Base):
     name = Column(String(50))
 
     user_id = Column(Integer, ForeignKey("user.id"), index=True)
+    store_id = Column(Integer, ForeignKey("store.id"), index=True)
     route_id = Column(Integer, ForeignKey("route.id"), index=True)
 
     list_item = relationship("ListItem", backref="list")

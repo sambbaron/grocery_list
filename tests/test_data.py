@@ -134,17 +134,19 @@ def add_list():
     # Check for test User and Store
     if session.query(User).get(1) is None:
         add_user()
+    if session.query(Store).get(1) is None:
+        add_store()
     if session.query(Route).get(1) is None:
         add_route()
 
     list1 = List(shop_date=datetime.date.today(),
                 user_id=1,
-                route_id=1
-    )
+                store_id=1,
+                route_id=1)
     list2 = List(shop_date=datetime.date.today() + datetime.timedelta(days=7),
                 user_id=1,
-                route_id=1
-    )
+                store_id=1,
+                route_id=1)
 
     session.add_all([list1, list2])
     session.commit()
