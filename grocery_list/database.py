@@ -10,7 +10,7 @@ from . import app
 class Base(object):
     """ Extend SQLAlchemy Base object """
 
-    def as_dict_base(self, excluded_columns = []):
+    def as_dict_base(self, excluded_columns=[]):
         """ Convert model data into dictionary
 
         Args:
@@ -22,11 +22,11 @@ class Base(object):
         data_dict = {}
         for column in self.__table__.columns:
             if column.name not in excluded_columns:
-                data_dict.update({column.name: getattr(self,column.name)})
+                data_dict.update({column.name: getattr(self, column.name)})
 
         return data_dict
 
-        # TODO: Try self.__mapper__.columns to retrieve all related columns as well
+        # TODO: Try self.__mapper__.columns to retrieve all related columns
 
 
 # Database URI from config.py

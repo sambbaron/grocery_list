@@ -115,10 +115,8 @@ class Route(Base):
 # Allow users to use routes without stores
 # Create default route
 route_store_table = Table("route_store", Base.metadata,
-                         Column("route_id", Integer, ForeignKey("route.id"), nullable=False, index=True),
-                         Column("store_id", Integer, ForeignKey("store.id"), nullable=False, index=True)
-)
-
+                          Column("route_id", Integer, ForeignKey("route.id"), nullable=False, index=True),
+                          Column("store_id", Integer, ForeignKey("store.id"), nullable=False, index=True))
 
 
 class ItemGroup(Base):
@@ -143,18 +141,16 @@ class ItemGroup(Base):
     description = Column(String(100))
 
     store = relationship("Store",
-                          secondary="store_item_group",
-                          backref="item_group"
-    )
+                         secondary="store_item_group",
+                         backref="item_group")
     route = relationship("RouteGroup", backref="item_group")
     list_item = relationship("ListItem", backref="item_group")
 
 
 # Item Groups assigned to Stores
 store_itemGroup_table = Table("store_item_group", Base.metadata,
-                         Column("item_group_id", Integer, ForeignKey("item_group.id"), nullable=False, index=True),
-                         Column("store_id", Integer, ForeignKey("store.id"), nullable=False, index=True)
-)
+                              Column("item_group_id", Integer, ForeignKey("item_group.id"), nullable=False, index=True),
+                              Column("store_id", Integer, ForeignKey("store.id"), nullable=False, index=True))
 
 
 class RouteGroup(Base):

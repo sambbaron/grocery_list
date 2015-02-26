@@ -5,6 +5,7 @@ from functools import wraps
 
 from flask import request, Response
 
+
 def accept(mimetype):
     def decorator(func):
         """
@@ -20,6 +21,7 @@ def accept(mimetype):
             return Response(data, 406, mimetype="application/json")
         return wrapper
     return decorator
+
 
 def require(mimetype):
     def decorator(func):

@@ -1,14 +1,14 @@
 """ Application Views """
 
-from flask import render_template, redirect, url_for, request, abort
+from flask import render_template, redirect, url_for, request
 from flask.ext.login import current_user, login_user, logout_user, flash, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
-from sqlalchemy import update, select
 
 from . import app
 from .database import session
 from .models import *
 from .utils import update_from_form
+
 
 @app.route("/")
 def index():
@@ -17,7 +17,7 @@ def index():
     """
 
     # If no user, redirect to login
-    if current_user.is_anonymous() == True:
+    if current_user.is_anonymous():
         return redirect(url_for("login"))
 
     user_id = int(current_user.get_id())
@@ -38,7 +38,7 @@ def login():
     """ Returns: Login page """
 
     if request.method == "POST":
-        #HTML form entry
+        # HTML form entry
         email = request.form["email"]
         password = request.form["password"]
         # Return user
@@ -54,7 +54,7 @@ def login():
             return redirect(url_for("login"))
 
     # GET request
-    if current_user.is_anonymous() == True:
+    if current_user.is_anonymous():
         return render_template("login.html")
     else:
         return redirect(url_for("index"))
@@ -77,15 +77,14 @@ def profile_get():
     """
 
     # New User signup
-    if current_user.is_anonymous() == True:
+    if current_user.is_anonymous():
         return render_template("profile.html")
 
     # Return existing User profile data
     user = session.query(User).get(int(current_user.get_id()))
     return render_template("profile.html",
                            name=user.name,
-                           email=user.email
-    )
+                           email=user.email)
 
 
 @app.route("/profile/signup", methods=["POST"])
@@ -125,8 +124,8 @@ def profile_post():
     return redirect(url_for("stores"))
 
 
-@app.route("/profile/<int:id>", methods=["PUT", "POST"])
-def profile_put(id):
+@app.route("/profile/<user_id>", methods=["PUT", "POST"])
+def profile_put(user_id):
     """ Edit existing user profile
 
     Return:
@@ -134,10 +133,10 @@ def profile_put(id):
     """
     data = request.form
 
-    user = session.query(User).get(id)
+    user = session.query(User).get(user_id)
 
     if not user:
-        flash("Could not find user with id {}".format(id), "danger")
+        flash("Could not find user with id {}".format(user_id), "danger")
         return redirect(url_for("index"))
 
     # Test current password match
@@ -166,10 +165,10 @@ def profile_put(id):
 
 
 @app.route("/stores/new", methods=["GET"])
-@app.route("/stores/<int:id>", methods=["GET"])
+@app.route("/stores/<store_id>", methods=["GET"])
 @app.route("/stores", methods=["GET"])
 @login_required
-def store_get(id=None):
+def store_get(store_id=None):
     """ Retrieve all stores list and single store detail form
 
     Return:
@@ -181,18 +180,18 @@ def store_get(id=None):
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()).all()
 
     # If no Store, select first store associated with current user
-    if not id:
-        id = session.query(UserStore.store_id).filter(UserStore.user_id == current_user.get_id()).first()
+    if not store_id:
+        store_id = session.query(UserStore.store_id).filter(UserStore.user_id == current_user.get_id()).first()
 
 
     # Single store provided
-    if id is not None:
+    if store_id is not None:
         # Retrieve single selected store
         user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
-                                                     UserStore.store_id == id).first()
+                                                     UserStore.store_id == store_id).first()
         # Test whether store exists
         if user_store is None:
-            flash("Could not find store with id {}".format(UserStore.store_id),"danger")
+            flash("Could not find store with id {}".format(UserStore.store_id), "danger")
             return redirect(url_for("store_get"))
     # New store requested
     elif request.path == "/stores/new":
@@ -223,9 +222,9 @@ def store_post():
     session.commit()
 
     # Associate new Store with current User
-    user_store = UserStore(store_id = store.id,
-                           user_id = current_user.get_id()
-    )
+    user_store = UserStore(store_id=store.id,
+                           user_id=current_user.get_id())
+
     session.add(user_store)
     session.commit()
 
@@ -237,9 +236,9 @@ def store_post():
     flash("Successfully created store", "success")
     return redirect(request.url)
 
-@app.route("/stores/<int:id>", methods=["PUT", "POST"])
+@app.route("/stores/<store_id>", methods=["PUT", "POST"])
 @login_required
-def store_put(id):
+def store_put(store_id):
     """ Edit existing store
 
     Return:
@@ -249,10 +248,10 @@ def store_put(id):
     data = request.form
     # Set UserStore record
     user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
-                                                     UserStore.store_id == id).first()
+                                                 UserStore.store_id == store_id).first()
     # Test whether UserStore record exists
     if not user_store:
-        flash("Could not find store with id {} for current user".format(UserStore.store_id),"danger")
+        flash("Could not find store with id {} for current user".format(UserStore.store_id), "danger")
         return redirect(url_for("store_get"))
 
     # Update data
@@ -320,7 +319,7 @@ def route_get(store_id=None, route_id=None):
 
         # Test whether Route exists
         if route is None:
-            flash("Could not find route with id {}".format(route.route_id),"danger")
+            flash("Could not find route with id {}".format(route.route_id), "danger")
             return redirect(url_for("route_get"))
     # New Route requested
     elif request.path.find("/routes/new") > -1:
@@ -335,8 +334,7 @@ def route_get(store_id=None, route_id=None):
 
     return render_template("routes.html", stores=stores, store=store,
                            routes=routes, route=route,
-                           route_groups=route_groups, item_groups=item_groups
-    )
+                           route_groups=route_groups, item_groups=item_groups)
 
 
 @app.route("/stores/<int:store_id>/routes/new", methods=["POST"])
@@ -357,8 +355,7 @@ def route_post(store_id):
     # Create new Route
     route = Route(name="New Route",
                   user_id=current_user.get_id(),
-                  store=[store]
-    )
+                  store=[store])
 
     session.add(route)
     session.commit()
@@ -387,7 +384,7 @@ def route_put(store_id, route_id):
 
     # Test whether Route record exists
     if not route:
-        flash("Could not find route with id {}".format(route_id),"danger")
+        flash("Could not find route with id {}".format(route_id), "danger")
         return redirect(url_for("route_get"))
 
     # Update data
@@ -427,7 +424,7 @@ def route_group_delete(route_id, route_group_id):
 
     # Test whether RouteGroup record exists
     if not route_group:
-        flash("Could not find route group record with id {}".format(route_group_id),"danger")
+        flash("Could not find route group record with id {}".format(route_group_id), "danger")
         return route_get(route_id=route_id)
 
     session.delete(route_group)
