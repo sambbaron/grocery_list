@@ -314,7 +314,7 @@ def route_get(store_id=None, route_id=None):
 
     # Set Route Groups
     route_groups = {}
-    if not Route and route != "new":
+    if route and route != "new":
         # Retrieve related Item Groups ordered by Route Order
         route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == route.id).order_by(RouteGroup.route_order)
 
