@@ -284,15 +284,26 @@ def route_get(store_id=None, route_id=None):
         flash("You do not have any stores setup. Please setup a store first.", "warning")
         return redirect(url_for("store_get"))
 
-    # If no selected Store or Route, set to first Store
+    # If no selected Store or Route, set to first Store for user
     if not store_id and not route_id:
         store_id = session.query(UserStore.user_id).filter(UserStore.user_id == current_user.get_id()).first()
 
-    # Set selected Store
+    # Set Store object using id
     store = session.query(Store).get(store_id)
 
     # Retrieve all routes for current User and selected Store
     routes = session.query(Route).filter(Route.user_id == current_user.get_id(), Route.store.contains(store)).all()
+
+    # If Route provided, but no Store, lookup Store associated with Route
+    if route_id and not store_id:
+        store = session.query(Store).filter(Store.route.contains(session.query(Route).get(route_id))).first()
+        store_id = store.id
+
+    # If Store provided, but no Route, lookup first Route associated with Store
+    if store_id and not route_id:
+        route = session.query(Route).filter(Route.store.contains(store)).first()
+        route_id = route.id
+
 
     # Create Route Groups dictionary
     route_groups = {}
