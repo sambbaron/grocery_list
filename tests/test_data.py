@@ -16,16 +16,15 @@ def add_all():
     add_route_group()
     add_list()
 
+
 def add_user():
     """ Add Test User """
     user1 = User(name="Testy",
-                email="testy@test.com",
-                password=generate_password_hash("test")
-    )
+                 email="testy@test.com",
+                 password=generate_password_hash("test"))
     user2 = User(name="Testy2",
-                email="testy2@test.com",
-                password=generate_password_hash("test")
-    )
+                 email="testy2@test.com",
+                 password=generate_password_hash("test"))
     session.add_all([user1, user2])
     session.commit()
 
@@ -54,15 +53,13 @@ def add_user_store():
         add_store()
 
     user_store1 = UserStore(user_id=1,
-                           store_id=1,
-                           nickname="My Test Store",
-                           default=True
-    )
+                            store_id=1,
+                            nickname="My Test Store",
+                            default=True)
     user_store2 = UserStore(user_id=1,
-                           store_id=2,
-                           nickname="My Other Store",
-                           default=False
-    )
+                            store_id=2,
+                            nickname="My Other Store",
+                            default=False)
 
     session.add_all([user_store1, user_store2])
     session.commit()
@@ -83,15 +80,13 @@ def add_route():
     store1 = session.query(Store).filter(Store.id == 1).all()
 
     route1 = Route(name="Full Shop",
-                  default=True,
-                  user_id=1,
-                  store=store1
-    )
+                   default=True,
+                   user_id=1,
+                   store=store1)
     route2 = Route(name="Quick Shop",
-                  default=False,
-                  user_id=1,
-                  store=store1
-    )
+                   default=False,
+                   user_id=1,
+                   store=store1)
 
     session.add_all([route1, route2])
     session.commit()
@@ -108,6 +103,7 @@ def add_item_group():
         session.add(ItemGroup(name=item_group))
 
     session.commit()
+
 
 def add_route_group():
     """ Add Test Route Group
@@ -126,6 +122,7 @@ def add_route_group():
 
     session.commit()
 
+
 def add_list():
     """ Add Test List
 
@@ -140,13 +137,13 @@ def add_list():
         add_route()
 
     list1 = List(shop_date=datetime.date.today(),
-                user_id=1,
-                store_id=1,
-                route_id=1)
+                 user_id=1,
+                 store_id=1,
+                 route_id=1)
     list2 = List(shop_date=datetime.date.today() + datetime.timedelta(days=7),
-                user_id=1,
-                store_id=1,
-                route_id=1)
+                 user_id=1,
+                 store_id=1,
+                 route_id=1)
 
     session.add_all([list1, list2])
     session.commit()
