@@ -2,7 +2,7 @@
 
 import datetime
 
-from sqlalchemy import Table, Column, Integer, String, Boolean, DateTime, Numeric, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, Boolean, Date, Numeric, ForeignKey
 from sqlalchemy.orm import relationship
 
 from flask.ext.login import UserMixin
@@ -208,7 +208,7 @@ class List(Base):
     __tablename__ = "list"
 
     id = Column(Integer, primary_key=True)
-    shop_date = Column(DateTime, nullable=False)
+    shop_date = Column(Date, nullable=False)
     name = Column(String(50))
 
     user_id = Column(Integer, ForeignKey("user.id"), index=True)
