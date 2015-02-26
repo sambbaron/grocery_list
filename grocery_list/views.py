@@ -315,7 +315,7 @@ def route_get(store_id=None, route_id=None):
     # Single Route provided
     if route is not None:
         # Retrieve related Item Groups ordered by Route Order
-        route_groups = route.item_group
+        route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == route.id).order_by(RouteGroup.route_order)
 
         # Test whether Route exists
         if route is None:
