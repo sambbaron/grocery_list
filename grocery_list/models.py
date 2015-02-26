@@ -217,6 +217,21 @@ class List(Base):
 
     list_item = relationship("ListItem", backref="list")
 
+    def date_name(self):
+        """ Combine shop_date and name into a name
+
+        Example:
+            Thu Feb 26: Today's Shop
+
+        Return:
+            Combined name
+        """
+        date_name = self.shop_date.strftime("%a %b %w")
+        if self.name:
+            date_name = "{}: {}".format(date_name, self.name)
+
+        return date_name
+
 
 class ItemMeasurements(Base):
     """ Predefined measurements
