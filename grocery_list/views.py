@@ -180,6 +180,11 @@ def store_get(id=None):
     # Retrieve all stores for current user
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()).all()
 
+    # If no Store, select first store associated with current user
+    if not id:
+        id = session.query(UserStore.store_id).filter(UserStore.user_id == current_user.get_id()).first()
+
+
     # Single store provided
     if id is not None:
         # Retrieve single selected store
@@ -288,31 +293,30 @@ def route_get(store_id=None, route_id=None):
     if not store_id and not route_id:
         store_id = session.query(UserStore.user_id).filter(UserStore.user_id == current_user.get_id()).first()
 
-    # Set Store object using id
-    store = session.query(Store).get(store_id)
-
-    # Retrieve all routes for current User and selected Store
-    routes = session.query(Route).filter(Route.user_id == current_user.get_id(), Route.store.contains(store)).all()
-
     # If Route provided, but no Store, lookup Store associated with Route
     if route_id and not store_id:
         store = session.query(Store).filter(Store.route.contains(session.query(Route).get(route_id))).first()
-        store_id = store.id
+    else:
+        # Set Store object using provided id
+        store = session.query(Store).get(store_id)
 
     # If Store provided, but no Route, lookup first Route associated with Store
     if store_id and not route_id:
         route = session.query(Route).filter(Route.store.contains(store)).first()
-        route_id = route.id
+    else:
+        # Set Route object using provided id
+        route = session.query(Route).get(route_id)
 
+    # Retrieve all routes for current User and selected Store
+    routes = session.query(Route).filter(Route.user_id == current_user.get_id(), Route.store.contains(store)).all()
 
     # Create Route Groups dictionary
     route_groups = {}
 
     # Single Route provided
-    if route_id is not None:
-        # Retrieve single selected Route and related Item Groups ordered by Route Order
-        route = session.query(Route).get(route_id)
-        route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == route_id).order_by(RouteGroup.route_order)
+    if route is not None:
+        # Retrieve related Item Groups ordered by Route Order
+        route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == route.id).order_by(RouteGroup.route_order)
 
         # Test whether Route exists
         if route is None:
