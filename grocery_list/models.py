@@ -52,11 +52,11 @@ class Store(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
-    street_address = Column(String(100))
-    city = Column(String(50))
-    state = Column(String(2))
-    postal_code = Column(String(10))
-    country = Column(String(50))
+    street_address = Column(String(100), default="")
+    city = Column(String(50), default="")
+    state = Column(String(2), default="")
+    postal_code = Column(String(10), default="")
+    country = Column(String(50), default="")
 
     user = relationship("UserStore", backref="store")
     list = relationship("List", backref="store")
@@ -76,7 +76,7 @@ class UserStore(Base):
 
     user_id = Column(Integer, ForeignKey("user.id"), primary_key=True)
     store_id = Column(Integer, ForeignKey("store.id"), primary_key=True)
-    nickname = Column(String(50))
+    nickname = Column(String(50), default="")
     default = Column(Boolean, default=False)
 
 
@@ -152,7 +152,7 @@ class ItemGroup(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
-    description = Column(String(100))
+    description = Column(String(100), default="")
 
     store = relationship("Store",
                          secondary="store_item_group",
@@ -209,7 +209,7 @@ class List(Base):
 
     id = Column(Integer, primary_key=True)
     shop_date = Column(Date, nullable=False, default=datetime.date.today())
-    name = Column(String(50))
+    name = Column(String(50), default="")
 
     user_id = Column(Integer, ForeignKey("user.id"), index=True)
     store_id = Column(Integer, ForeignKey("store.id"), index=True)
@@ -279,8 +279,8 @@ class ListItem(Base):
 
     id = Column(Integer, primary_key=True)
     item_name = Column(String(50), nullable=False)
-    item_notes = Column(String(100))
-    item_quantity = Column(Numeric)
+    item_notes = Column(String(100), default="")
+    item_quantity = Column(Numeric, default=0)
 
     list_id = Column(Integer, ForeignKey("list.id"), nullable=False, index=True)
     item_measurement_id = Column(Integer, ForeignKey("item_measurement.id"))
