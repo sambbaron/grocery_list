@@ -450,7 +450,7 @@ def list_get(store_id=None, list_id=None):
         return redirect(url_for("store_get"))
 
     # Set selected Store
-    # If no selected Store or List, set to first Store for user
+    # If no selected Store or List, set to first Store and first List for user
     if not store_id and not list_id:
         store_id = session.query(UserStore.store_id).filter(UserStore.user_id == current_user.get_id())\
             .order_by(UserStore.store_id).first()
@@ -485,10 +485,23 @@ def list_get(store_id=None, list_id=None):
     list_items = {}
     if list and list != "new":
         # Retrieve related List Items
-        list_items = list.list_item
+        list_items = session.query(ListItem, ListItem)\
+            .filter(ListItem.list_id == list.id)\
+            .order_by(ListItem.id)\
+            .all()
 
-        # Retrieve related Route Groups for form input selection
+        # If List has associated Route
         if list.route_id:
+
+            # Retrieve related List Items with Route Group
+            list_items = session.query(ListItem, RouteGroup.route_order)\
+                .filter(ListItem.list_id == list.id,
+                        RouteGroup.route_id == list.route_id,
+                        ListItem.item_group_id == RouteGroup.item_group_id)\
+                .order_by(RouteGroup.route_order)\
+                .all()
+
+            # Retrieve related Route Groups for form input selection
             route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id) \
                 .order_by(RouteGroup.route_order).all()
 
