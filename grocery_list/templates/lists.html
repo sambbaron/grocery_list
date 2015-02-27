@@ -20,7 +20,7 @@
         <div id="list-detail-container" class="col-md-9">
             {% if list %}
                 <h3 class="text-center">List Detail</h3>
-                <form name="list-detail" id="list-detail" class="" method="post"
+                <form name="list-detail" id="list-detail" method="post"
                 action={% if list == "new" %}"/stores/{{ store.id }}/lists/new"{% else %}"/stores/{{ store.id }}/lists/{{ list.id }}"{% endif %} >
 
                     <label for="list.shop_date" class="col-md-1 control-label">Shop Date</label>
@@ -29,10 +29,22 @@
                                                      value="{% if list != "new" %}{{ list.shop_date }}{% endif %}"></div>
                     </div>
 
-                    <label for="list.name" class="col-md-1 control-label">Name</label>
+                    <label for="list.name" class="col-md-2 control-label">List Name (optional)</label>
                     <div class="form-group">
                         <div class="col-md-5"><input type="text" id="list.name" name="List.{{ list.id }}.name" class="form-control"
                                                      value="{% if list != "new" %}{{ list.name }}{% endif %}"></div>
+                    </div>
+
+                    <label for="list.route" class="col-md-2 control-label">Route (optional)</label>
+                    <div class="form-group col-md-5">
+                        <select name="List.{{ list.id }}.route_id" form="list-detail"  class="form-control text-center">
+                            {% for route in routes %}
+                                <option value="{{ route.id }}" class="text-center"
+                                        {% if list.route_id == route.id %}selected{% endif %}>
+                                    {{ route.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                 </form>
@@ -76,7 +88,7 @@
                                 <td>
                                     <select name="ListItem.{{ list_item.ListItem.id }}.item_group_id" form="list-detail"  class="form-control">
                                         {% for route_group in route_groups %}
-                                            <option value="{{ route_group.id }}"
+                                            <option value="{{ route_group.item_group.id }}"
                                                     {% if list_item.ListItem.item_group_id == route_group.item_group.id %}selected{% endif %}>
                                                 {{ route_group.item_group.name }}
                                             </option>

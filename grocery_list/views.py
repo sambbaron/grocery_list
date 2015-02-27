@@ -462,6 +462,10 @@ def list_get(store_id=None, list_id=None):
         # Set Store object using provided id
         store = session.query(Store).get(store_id)
 
+    # Set all Routes for current User and selected Store
+    routes = session.query(Route).filter(Route.user_id == current_user.get_id(), Route.store.contains(store)) \
+        .order_by(Route.id).all()
+
     # Set all Lists for current User and selected Store
     lists = session.query(List).filter(List.user_id == current_user.get_id(), List.store == store)\
         .order_by(List.shop_date.desc()).all()
@@ -481,34 +485,32 @@ def list_get(store_id=None, list_id=None):
 
     route_groups = {}
 
-    # Set List Items
+    # Set Route and List Items data
     list_items = {}
-    if list and list != "new":
-        # Retrieve related List Items
+    if list and list != "new" and list.route_id:
+        # Retrieve related List Items with Route Group
+        list_items = session.query(ListItem, RouteGroup.route_order)\
+            .filter(ListItem.list_id == list.id,
+                    RouteGroup.route_id == list.route_id,
+                    ListItem.item_group_id == RouteGroup.item_group_id)\
+            .order_by(RouteGroup.route_order)\
+            .all()
+
+        # Retrieve related Route Groups for form input selection
+        route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id) \
+            .order_by(RouteGroup.route_order).all()
+    else:
+        # Retrieve related List Items without route group order
         list_items = session.query(ListItem, ListItem)\
             .filter(ListItem.list_id == list.id)\
             .order_by(ListItem.id)\
             .all()
 
-        # If List has associated Route
-        if list.route_id:
-
-            # Retrieve related List Items with Route Group
-            list_items = session.query(ListItem, RouteGroup.route_order)\
-                .filter(ListItem.list_id == list.id,
-                        RouteGroup.route_id == list.route_id,
-                        ListItem.item_group_id == RouteGroup.item_group_id)\
-                .order_by(RouteGroup.route_order)\
-                .all()
-
-            # Retrieve related Route Groups for form input selection
-            route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id) \
-                .order_by(RouteGroup.route_order).all()
-
     # Set Item Measurements for form input selection
     item_measurements = session.query(ItemMeasurements).order_by(ItemMeasurements.id).all()
 
     return render_template("lists.html", stores=stores, store=store,
+                           routes=routes,
                            lists=lists, list=list,
                            list_items=list_items,
                            route_groups=route_groups,
