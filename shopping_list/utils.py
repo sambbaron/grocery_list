@@ -27,20 +27,21 @@ def update_from_form(data, **new_primary_keys):
 
     # Loop through sorted dictionary
     for key, value in sorted(data.items()):
-
-        # Set key parameters per Form input name schema
-        param = str(key).split(".", 2)
-        # SQLAlchemy model table name
-        key_model = param[0]
-        # Primary Key - return from new_primary_keys if not provided
-        if not param[1] or param[1].isspace():
-            key_primary_key = new_primary_keys[key_model]
-        else:
-            key_primary_key = tuple(int(i) for i in param[1].split(" "))
-        # Column name
-        key_column = param[2]
-
         try:
+            # Set key parameters per Form input name schema
+            param = str(key).split(".", 2)
+            # SQLAlchemy model table name
+            key_model = param[0]
+            # Primary Key - return from new_primary_keys if not provided
+            if not param[1] or param[1].isspace():
+                key_primary_key = new_primary_keys[key_model]
+            else:
+                key_primary_key = param[1]
+            # Convert Primary Keys to tuple
+            key_primary_key = tuple(int(i) for i in str(key_primary_key).split(" "))
+            # Column name
+            key_column = param[2]
+
             # Set SQLAlchemy model class
             model = getattr(models, key_model)
             # Set row to update
@@ -53,10 +54,12 @@ def update_from_form(data, **new_primary_keys):
             # Perform record update with dict value
             setattr(row, key_column, value)
             session.commit()
+
         except Exception as e:
             print("ERROR = {}".format(e))
+            print("Submitted Key = {}".format(key))
             print("Model = {}".format(param[0]))
-            print("Key = {}".format(param[1]))
+            print("Primary_Key = {}".format(param[1]))
             print("Column = {}".format(param[2]))
             print("Value = {}".format(value))
             return False

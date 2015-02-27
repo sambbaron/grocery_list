@@ -222,8 +222,12 @@ def store_post():
     session.add(user_store)
     session.commit()
 
+    # Create joined UserStore primary keys
+    user_store_keys = [str(user_store.user_id), str(user_store.store_id)]
+    user_store_keys = " ".join(user_store_keys)
+
     # Update data in new record
-    if not update_from_form(data, Store=store.id, UserStore=(user_store.user_id, user_store.store_id)):
+    if not update_from_form(data, Store=store.id, UserStore=user_store_keys):
         flash("Server error in creating store", "danger")
         return redirect(request.url)
 
