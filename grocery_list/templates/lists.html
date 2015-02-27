@@ -78,7 +78,7 @@
                                     <select name="ListItem.{{ list_item.id }}.item_measurement_id" form="list-detail"  class="form-control text-center">
                                         {% for item_measurement in item_measurements %}
                                             <option value="{{ item_measurement.id }}" class="text-center"
-                                                    {% if list_item.item_measurement.id == item_measurement.id %}selected{% endif %}>
+                                                    {% if list_item.item_measurement_id == item_measurement.id %}selected{% endif %}>
                                                 {{ item_measurement.name }}
                                             </option>
                                         {% endfor %}
