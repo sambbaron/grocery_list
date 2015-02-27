@@ -490,7 +490,7 @@ def list_get(store_id=None, list_id=None):
     if list and list != "new":
 
         # Retrieve List Items associated with List (query object)
-        list_items_q = session.query(ListItem).filter(ListItem.list_id == list_id)
+        list_items_q = session.query(ListItem).filter(ListItem.list_id == list.id)
 
         # If List has associated Route
         if list.route_id:
