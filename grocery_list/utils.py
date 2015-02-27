@@ -57,7 +57,8 @@ def update_from_form(data, **new_primary_keys):
             print("ERROR = {}".format(e))
             print("Model = {}".format(param[0]))
             print("Key = {}".format(param[1]))
-            print("Value = {}".format(param[2]))
+            print("Column = {}".format(param[2]))
+            print("Value = {}".format(value))
             return False
 
     return True
