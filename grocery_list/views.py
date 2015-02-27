@@ -483,28 +483,34 @@ def list_get(store_id=None, list_id=None):
         # Set List object using provided id
         list = session.query(List).get(list_id)
 
-    route_groups = {}
 
     # Set Route and List Items data
     list_items = {}
-    if list and list != "new" and list.route_id:
-        # Retrieve related List Items with Route Group
-        list_items = session.query(ListItem).outerjoin(List).outerjoin(Route).outerjoin(RouteGroup)\
-            .filter(ListItem.list_id == list.id,
-                    RouteGroup.route_id == list.route_id,
-                    ListItem.item_group_id == RouteGroup.item_group_id)\
-            .order_by(RouteGroup.route_order)\
-            .all()
+    route_groups = {}
+    if list and list != "new":
 
-        # Retrieve related Route Groups for form input selection
-        route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id) \
-            .order_by(RouteGroup.route_order).all()
-    else:
-        # Retrieve related List Items without route group order
-        list_items = session.query(ListItem)\
-            .filter(ListItem.list_id == list.id)\
-            .order_by(ListItem.id)\
-            .all()
+        # Retrieve List Items associated with List (query object)
+        list_items_q = session.query(ListItem).filter(ListItem.list_id == list_id)
+
+        # If List has associated Route
+        if list.route_id:
+
+            # Retrieve related Route Groups for form input selection and List Item ordering (query object)
+            route_groups_q = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id) \
+                .order_by(RouteGroup.route_order)
+
+            # Retrieve related List Items with route group order
+            list_items_sq = list_items_q.subquery()
+            route_groups_sq = route_groups_q.subquery()
+            list_items_q = session.query(list_items_sq) \
+                .outerjoin(route_groups_sq, list_items_sq.c.item_group_id == route_groups_sq.c.item_group_id) \
+                .order_by(route_groups_sq.c.route_order)
+
+            # Return Route Group rows for template
+            route_groups = route_groups_q.all()
+
+        # Return List Item rows for template
+        list_items = list_items_q.all()
 
     # Set Item Measurements for form input selection
     item_measurements = session.query(ItemMeasurements).order_by(ItemMeasurements.id).all()
