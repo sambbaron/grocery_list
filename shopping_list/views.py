@@ -89,7 +89,7 @@ def profile_get():
 
 
 @app.route("/profile/signup", methods=["POST"])
-def profile_post():
+def profile_add():
     """ Create new user
 
     Input user profile and login new user
@@ -126,7 +126,7 @@ def profile_post():
 
 
 @app.route("/profile/<user_id>", methods=["PUT", "POST"])
-def profile_put(user_id):
+def profile_update(user_id):
     """ Edit existing user profile
 
     Return:
@@ -200,7 +200,7 @@ def store_get(store_id=None):
 
 @app.route("/stores/new", methods=["POST"])
 @login_required
-def store_post():
+def store_add():
     """ Create new store
 
     Add store record and associate with current user
@@ -237,7 +237,7 @@ def store_post():
 
 @app.route("/stores/<store_id>", methods=["PUT", "POST"])
 @login_required
-def store_put(store_id):
+def store_update(store_id):
     """ Edit existing store
 
     Return:
@@ -334,7 +334,7 @@ def route_get(store_id=None, route_id=None):
 
 @app.route("/stores/<int:store_id>/routes/new", methods=["POST"])
 @login_required
-def route_post(store_id):
+def route_add(store_id):
     """ Create new Route
 
     Associate new Route with Store
@@ -367,7 +367,7 @@ def route_post(store_id):
 
 @app.route("/stores/<int:store_id>/routes/<int:route_id>", methods=["PUT", "POST"])
 @login_required
-def route_put(store_id, route_id):
+def route_update(store_id, route_id):
     """ Edit existing Route
 
     Return:
@@ -398,7 +398,7 @@ def route_put(store_id, route_id):
 
 @app.route("/routes/<int:route_id>/routegroups/new", methods=["POST"])
 @login_required
-def route_group_post(route_id):
+def route_group_add(route_id):
     """ Add new Route Group to existing Route
 
     Return:
@@ -545,7 +545,7 @@ def list_get(store_id=None, list_id=None):
 
 @app.route("/stores/<int:store_id>/lists/new", methods=["POST"])
 @login_required
-def list_post(store_id):
+def list_add(store_id):
     """ Create new List
 
     Associate new List with Store
@@ -575,7 +575,7 @@ def list_post(store_id):
 
 @app.route("/stores/<int:store_id>/lists/<list_id>", methods=["PUT", "POST"])
 @login_required
-def list_put(store_id, list_id):
+def list_update(store_id, list_id):
     """ Edit existing List
 
     Return:
@@ -604,7 +604,7 @@ def list_put(store_id, list_id):
 
 @app.route("/lists/<list_id>/listitems/new", methods=["POST"])
 @login_required
-def list_item_post(list_id):
+def list_item_add(list_id):
     """ Add new List Item to existing List
 
     Return:
