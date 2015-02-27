@@ -56,6 +56,7 @@
 
 
                 <br>
+                {% if list != "new" %}
                 <div id="list-detail-listitems">
                     <br>
                     <br>
@@ -115,7 +116,7 @@
                         <button type="submit" class="btn btn-danger btn-sm">New Item</button>
                     </form>
                 </div>
-
+                {% endif %}
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-8">
                         <button type="submit" form="list-detail" class="btn btn-primary center-block">Update List</button>
