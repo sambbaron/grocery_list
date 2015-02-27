@@ -594,7 +594,7 @@ def list_item_post(list_id):
     return list_get(list_id=list_id)
 
 
-@app.route("/lists/<list_id>/listitems/<list_item_id>/delete", methods=["POST"])
+@app.route("/lists/<list_id>/listitems/<list_item_id>/delete", methods=["POST", "DELETE"])
 @login_required
 def list_item_delete(list_id, list_item_id):
     """ Delete List Item from existing List
