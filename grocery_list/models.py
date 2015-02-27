@@ -284,4 +284,4 @@ class ListItem(Base):
 
     list_id = Column(Integer, ForeignKey("list.id"), nullable=False, index=True)
     item_measurement_id = Column(Integer, ForeignKey("item_measurement.id"))
-    item_group_id = Column(Integer, ForeignKey("item_group.id"), nullable=False, index=True)
+    item_group_id = Column(Integer, ForeignKey("item_group.id"), index=True)
