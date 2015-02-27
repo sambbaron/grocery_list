@@ -65,20 +65,20 @@
                         {% for list_item in list_items %}
                             <tr>
 
-                                <td><input type="text" name="ListItem.{{ list_item.ListItem.id }}.item_name" form="list-detail" class="form-control"
-                                           value="{{ list_item.ListItem.item_name }}"></td>
+                                <td><input type="text" name="ListItem.{{ list_item.id }}.item_name" form="list-detail" class="form-control"
+                                           value="{{ list_item.item_name }}"></td>
 
-                                <td><input type="text" name="ListItem.{{ list_item.ListItem.id }}.item_notes" form="list-detail" class="form-control"
-                                           value="{{ list_item.ListItem.item_notes }}"></td>
+                                <td><input type="text" name="ListItem.{{ list_item.id }}.item_notes" form="list-detail" class="form-control"
+                                           value="{{ list_item.item_notes }}"></td>
 
-                                <td><input type="text" name="ListItem.{{ list_item.ListItem.id }}.item_quantity" form="list-detail" class="form-control text-center"
-                                           value="{{ list_item.ListItem.item_quantity }}"></td>
+                                <td><input type="text" name="ListItem.{{ list_item.id }}.item_quantity" form="list-detail" class="form-control text-center"
+                                           value="{{ list_item.item_quantity }}"></td>
 
                                 <td>
-                                    <select name="ListItem.{{ list_item.ListItem.id }}.item_measurement_id" form="list-detail"  class="form-control text-center">
+                                    <select name="ListItem.{{ list_item.id }}.item_measurement_id" form="list-detail"  class="form-control text-center">
                                         {% for item_measurement in item_measurements %}
                                             <option value="{{ item_measurement.id }}" class="text-center"
-                                                    {% if list_item.ListItem.item_measurement.id == item_measurement.id %}selected{% endif %}>
+                                                    {% if list_item.item_measurement.id == item_measurement.id %}selected{% endif %}>
                                                 {{ item_measurement.name }}
                                             </option>
                                         {% endfor %}
@@ -86,10 +86,10 @@
                                 </td>
 
                                 <td>
-                                    <select name="ListItem.{{ list_item.ListItem.id }}.item_group_id" form="list-detail"  class="form-control">
+                                    <select name="ListItem.{{ list_item.id }}.item_group_id" form="list-detail"  class="form-control">
                                         {% for route_group in route_groups %}
                                             <option value="{{ route_group.item_group.id }}"
-                                                    {% if list_item.ListItem.item_group_id == route_group.item_group.id %}selected{% endif %}>
+                                                    {% if list_item.item_group_id == route_group.item_group.id %}selected{% endif %}>
                                                 {{ route_group.item_group.name }}
                                             </option>
                                         {% endfor %}
@@ -97,7 +97,7 @@
                                 </td>
 
                                 <form name="listitem-delete" id="listitem-delete" method="post"
-                                      action="/lists/{{ list.id }}/listitems/{{ list_item.ListItem.id }}/delete">
+                                      action="/lists/{{ list.id }}/listitems/{{ list_item.id }}/delete">
                                     <td><button type="submit" class="btn btn-danger btn-sm center-block">Delete Item</button></td>
                                 </form>
 

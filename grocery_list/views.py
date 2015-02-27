@@ -489,7 +489,7 @@ def list_get(store_id=None, list_id=None):
     list_items = {}
     if list and list != "new" and list.route_id:
         # Retrieve related List Items with Route Group
-        list_items = session.query(ListItem, RouteGroup.route_order)\
+        list_items = session.query(ListItem).outerjoin(List).outerjoin(Route).outerjoin(RouteGroup)\
             .filter(ListItem.list_id == list.id,
                     RouteGroup.route_id == list.route_id,
                     ListItem.item_group_id == RouteGroup.item_group_id)\
@@ -501,7 +501,7 @@ def list_get(store_id=None, list_id=None):
             .order_by(RouteGroup.route_order).all()
     else:
         # Retrieve related List Items without route group order
-        list_items = session.query(ListItem, ListItem)\
+        list_items = session.query(ListItem)\
             .filter(ListItem.list_id == list.id)\
             .order_by(ListItem.id)\
             .all()
