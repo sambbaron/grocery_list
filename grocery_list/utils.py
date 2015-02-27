@@ -45,6 +45,11 @@ def update_from_form(data, **new_primary_keys):
             model = getattr(models, key_model)
             # Set row to update
             row = session.query(model).get(key_primary_key)
+
+            # For empty value, set to null if column type is integer
+            if value == "" and str(model.__table__.columns[key_column].type) == "INTEGER":
+                value = None
+
             # Perform record update with dict value
             setattr(row, key_column, value)
             session.commit()
