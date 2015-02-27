@@ -478,23 +478,79 @@ def list_get(store_id=None, list_id=None):
         # Set List object using provided id
         list = session.query(List).get(list_id)
 
+    route_groups = {}
+
     # Set List Items
     list_items = {}
     if list and list != "new":
-        # Retrieve related Item Groups ordered by List Order
+        # Retrieve related List Items
         list_items = list.list_item
+
+        # Retrieve related Route Groups for form input selection
+        if list.route_id:
+            route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id) \
+                .order_by(RouteGroup.route_order).all()
 
     # Set Item Measurements for form input selection
     item_measurements = session.query(ItemMeasurements).order_by(ItemMeasurements.id).all()
-
-    # Set Route Groups list for form input selection
-    route_groups = {}
-    if list and list.route_id:
-        route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id)\
-            .order_by(RouteGroup.route_order).all()
 
     return render_template("lists.html", stores=stores, store=store,
                            lists=lists, list=list,
                            list_items=list_items,
                            route_groups=route_groups,
                            item_measurements=item_measurements)
+
+
+@app.route("/stores/<int:store_id>/lists/new", methods=["POST"])
+@login_required
+def list_post(store_id):
+    """ Create new List
+
+    Associate new List with Store
+
+    Return:
+        List page
+    """
+    data = request.form
+
+    # Create new List
+    list = List(user_id=current_user.get_id(),
+                store_id=store_id)
+
+    session.add(list)
+    session.commit()
+
+    # Update data in new record
+    if not update_from_form(data, List=list.id):
+        flash("Server error in creating list", "danger")
+        return redirect(request.url)
+
+    flash("Successfully created list", "success")
+    return redirect(request.url)
+
+
+@app.route("/stores/<int:store_id>/lists/<list_id>", methods=["PUT", "POST"])
+@login_required
+def list_put(store_id, list_id):
+    """ Edit existing List
+
+    Return:
+        Single List page
+    """
+    # Return form data
+    data = request.form
+    # Set Route record
+    list = session.query(List).get(list_id)
+
+    # Test whether Route record exists
+    if not list:
+        flash("Could not find list with id {}".format(list_id), "danger")
+        return redirect(url_for("list_get"))
+
+    # Update data
+    if not update_from_form(data):
+        flash("Server error in updating list", "danger")
+        return redirect(request.url)
+
+    flash("Successfully updated list", "success")
+    return redirect(request.url)
