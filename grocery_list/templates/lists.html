@@ -23,31 +23,38 @@
                 <form name="list-detail" id="list-detail" method="post"
                 action={% if list == "new" %}"/stores/{{ store.id }}/lists/new"{% else %}"/stores/{{ store.id }}/lists/{{ list.id }}"{% endif %} >
 
-                    <label for="list.shop_date" class="col-md-1 control-label">Shop Date</label>
-                    <div class="form-group">
-                        <div class="col-md-4"><input type="date" id="list.shop_date" name="List.{{ list.id }}.shop_date" class="form-control text-center"
-                                                     value="{% if list != "new" %}{{ list.shop_date }}{% endif %}"></div>
-                    </div>
+                <div class="col-md-12 form-group form-inline">
+                    <label for="list.shop_date" class="col-md-2 control-label">Shop Date</label>
+                    <input type="date" id="list.shop_date" name="List.{{ list.id }}.shop_date" class="col-md-4 form-control text-center"
+                           value="{% if list != "new" %}{{ list.shop_date }}{% endif %}">
 
                     <label for="list.name" class="col-md-2 control-label">List Name (optional)</label>
-                    <div class="form-group">
-                        <div class="col-md-5"><input type="text" id="list.name" name="List.{{ list.id }}.name" class="form-control"
-                                                     value="{% if list != "new" %}{{ list.name }}{% endif %}"></div>
-                    </div>
-
-                    <label for="list.route" class="col-md-2 control-label">Route (optional)</label>
-                    <div class="form-group col-md-5">
-                        <select name="List.{{ list.id }}.route_id" form="list-detail"  class="form-control text-center">
-                            {% for route in routes %}
-                                <option value="{{ route.id }}" class="text-center"
-                                        {% if list.route_id == route.id %}selected{% endif %}>
-                                    {{ route.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                    <input type="text" id="list.name" name="List.{{ list.id }}.name" class="col-md-5 form-control"
+                           value="{% if list != "new" %}{{ list.name }}{% endif %}">
+                </div>
 
                 </form>
+
+                <div class="col-md-12 form-group form-inline pull-left">
+                    <label for="list.route" class="col-md-2 control-label">Route</label>
+                    <select name="List.{{ list.id }}.route_id" form="list-detail"  class="col-md-4 form-control text-center">
+                        <option value="">No Route</option>
+                        {% for route in routes %}
+                            <option value="{{ route.id }}" class="text-center"
+                                    {% if list.route_id == route.id %}selected{% endif %}>
+                                {{ route.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if list.route_id %}
+                        <form name="route-edit" id="route-edit" method="get"
+                              action="/stores/{{ list.store.id }}/routes/{% if list.route_id %}{{ list.route_id }}{% endif %}">
+                            <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                        </form>
+                    {% endif %}
+                </div>
+
+
                 <br>
                 <div id="list-detail-listitems">
                     <br>
@@ -108,7 +115,7 @@
                         <button type="submit" class="btn btn-danger btn-sm">New Item</button>
                     </form>
                 </div>
-{#                ****** DELETE LINE ************** #}
+
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-8">
                         <button type="submit" form="list-detail" class="btn btn-primary center-block">Update List</button>
