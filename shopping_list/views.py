@@ -232,7 +232,7 @@ def store_post():
         return redirect(request.url)
 
     flash("Successfully created store", "success")
-    return redirect(request.url)
+    return redirect(url_for("store_get", store_id=store.id))
 
 
 @app.route("/stores/<store_id>", methods=["PUT", "POST"])
@@ -259,7 +259,7 @@ def store_put(store_id):
         return redirect(request.url)
 
     flash("Successfully updated store", "success")
-    return redirect(request.url)
+    return redirect(url_for("store_get", store_id=user_store.store_id))
 
 # TODO: Default value not passing through form
 
@@ -360,7 +360,8 @@ def route_post(store_id):
         return redirect(request.url)
 
     flash("Successfully created route", "success")
-    return redirect(request.url)
+    return redirect(url_for("route_get",
+                            store_id=store.id, route_id=route.id))
 
 
 @app.route("/stores/<int:store_id>/routes/<int:route_id>", methods=["PUT", "POST"])
@@ -390,7 +391,8 @@ def route_put(store_id, route_id):
     route.renumber_route_order()
 
     flash("Successfully updated route", "success")
-    return redirect(request.url)
+    return redirect(url_for("route_get",
+                            store_id=route.store[0].id, route_id=route.id))
 
 
 @app.route("/routes/<int:route_id>/routegroups/new", methods=["POST"])
@@ -405,8 +407,11 @@ def route_group_post(route_id):
     session.add(route_group)
     session.commit()
 
+    route = session.query(Route).get(route_group.route_id)
+
     flash("Successfully added route group", "success")
-    return route_get(route_id=route_id)
+    return redirect(url_for("route_get",
+                        store_id=route.store[0].id, route_id=route_id))
 
 
 @app.route("/routes/<int:route_id>/routegroups/<int:route_group_id>/delete", methods=["POST"])
@@ -418,6 +423,7 @@ def route_group_delete(route_id, route_group_id):
         Route page
     """
     route_group = session.query(RouteGroup).get(route_group_id)
+    route = session.query(Route).get(route_group.route_id)
 
     # Test whether RouteGroup record exists
     if not route_group:
@@ -428,7 +434,8 @@ def route_group_delete(route_id, route_group_id):
     session.commit()
 
     flash("Successfully deleted route group", "success")
-    return route_get(route_id=route_id)
+    return redirect(url_for("route_get",
+                        store_id=route.store[0].id, route_id=route_id))
 
 
 @app.route("/lists", methods=["GET"])
@@ -552,7 +559,9 @@ def list_post(store_id):
         return redirect(request.url)
 
     flash("Successfully created list", "success")
-    return redirect(request.url)
+    return redirect(url_for("list_get",
+                            store_id=list.store_id,
+                            list_id=list.id))
 
 
 @app.route("/stores/<int:store_id>/lists/<list_id>", methods=["PUT", "POST"])
@@ -579,7 +588,9 @@ def list_put(store_id, list_id):
         return redirect(request.url)
 
     flash("Successfully updated list", "success")
-    return redirect(request.url)
+    return redirect(url_for("list_get",
+                            store_id=list.store_id,
+                            list_id=list.id))
 
 
 @app.route("/lists/<list_id>/listitems/new", methods=["POST"])
@@ -594,8 +605,12 @@ def list_item_post(list_id):
     session.add(list_item)
     session.commit()
 
+    list = session.query(List).get(list_item.list_id)
+
     flash("Successfully added list item", "success")
-    return list_get(list_id=list_id)
+    return redirect(url_for("list_get",
+                            store_id=list.store_id,
+                            list_id=list.id))
 
 
 @app.route("/lists/<list_id>/listitems/<list_item_id>/delete", methods=["POST", "DELETE"])
@@ -607,6 +622,7 @@ def list_item_delete(list_id, list_item_id):
         List page
     """
     list_item = session.query(ListItem).get(list_item_id)
+    list = session.query(List).get(list_id)
 
     # Test whether ListItem record exists
     if not list_item:
@@ -617,4 +633,6 @@ def list_item_delete(list_id, list_item_id):
     session.commit()
 
     flash("Successfully deleted list item", "success")
-    return list_get(list_id=list_id)
+    return redirect(url_for("list_get",
+                            store_id=list.store_id,
+                            list_id=list.id))
