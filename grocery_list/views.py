@@ -3,6 +3,7 @@
 from flask import render_template, redirect, url_for, request
 from flask.ext.login import current_user, login_user, logout_user, flash, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy import desc
 
 from . import app
 from .database import session
@@ -463,7 +464,7 @@ def list_get(store_id=None, list_id=None):
 
     # Set all Lists for current User and selected Store
     lists = session.query(List).filter(List.user_id == current_user.get_id(), List.store == store)\
-        .order_by(List.id).all()
+        .order_by(List.shop_date.desc()).all()
 
     # Set selected List
     # New List requested
@@ -473,7 +474,7 @@ def list_get(store_id=None, list_id=None):
     # If Store provided, but no List, lookup first List associated with Store
     elif store_id and not list_id:
         list = session.query(List).filter(List.user_id == current_user.get_id(), List.store == store)\
-            .order_by(List.id).first()
+            .order_by(List.shop_date.desc()).first()
     else:
         # Set List object using provided id
         list = session.query(List).get(list_id)
