@@ -4,9 +4,9 @@ import os
 
 from flask.ext.script import Manager
 
-from grocery_list import app
+from shopping_list import app
 
-from grocery_list.database import Base, engine
+from shopping_list.database import Base, engine
 from tests import test_data
 
 manager = Manager(app)

@@ -2,8 +2,8 @@
 
 from werkzeug.security import generate_password_hash
 
-from grocery_list.models import *
-from grocery_list.database import session
+from shopping_list.models import *
+from shopping_list.database import session
 
 
 def add_all():

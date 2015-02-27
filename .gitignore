@@ -6,10 +6,10 @@
 
 # Bower
 .bowerrc
-grocery_list/static/bower
+shopping_list/static/bower
 
 #Other
-grocery_list/templates/archive
+shopping_list/templates/archive
 sandbox.py
 
 ### Python template

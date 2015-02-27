@@ -6,12 +6,12 @@ import datetime
 
 from werkzeug.security import generate_password_hash
 
-from grocery_list import app
-from grocery_list.models import *
-from grocery_list.database import Base, engine, session
+from shopping_list import app
+from shopping_list.models import *
+from shopping_list.database import Base, engine, session
 
 # App configuration for testing environment
-os.environ["CONFIG_PATH"] = "grocery_list.config.TestingConfig"
+os.environ["CONFIG_PATH"] = "shopping_list.config.TestingConfig"
 
 class TestViews(unittest.TestCase):
     """ Views Integration Tests

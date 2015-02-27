@@ -5,7 +5,7 @@ import os
 
 class DevelopmentConfig(object):
     """Development Configuration"""
-    SQLALCHEMY_DATABASE_URI = "postgresql://sambbaron:1234@localhost:5432/grocery_list"
+    SQLALCHEMY_DATABASE_URI = "postgresql://sambbaron:1234@localhost:5432/shopping_list"
     DEBUG = True
     try:
         SECRET_KEY = os.environ["MY_SECRET_KEY"]
@@ -16,6 +16,6 @@ class DevelopmentConfig(object):
 
 class TestingConfig(object):
     """Development Configuration"""
-    SQLALCHEMY_DATABASE_URI = "postgresql://sambbaron:1234@localhost:5432/grocery_list_test"
+    SQLALCHEMY_DATABASE_URI = "postgresql://sambbaron:1234@localhost:5432/shopping_list_test"
     DEBUG = True
     SECRET_KEY = ""

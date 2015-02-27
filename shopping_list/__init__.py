@@ -7,7 +7,7 @@ from flask import Flask
 app = Flask(__name__)
 
 # Read configuration file
-config_path = os.environ.get("CONFIG_PATH", "grocery_list.config.DevelopmentConfig")
+config_path = os.environ.get("CONFIG_PATH", "shopping_list.config.DevelopmentConfig")
 app.config.from_object(config_path)
 
 # Import modules
