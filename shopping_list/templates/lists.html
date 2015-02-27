@@ -27,11 +27,11 @@
                 <div class="col-md-12 form-group form-inline">
                     <label for="list.shop_date" class="col-md-2 control-label">Shop Date</label>
                     <input type="date" id="list.shop_date" name="List.{{ list.id }}.shop_date" class="col-md-4 form-control text-center"
-                           value="{% if list != "new" %}{{ list.shop_date }}{% endif %}">
+                           value="{{ list.shop_date if list != "new" }}">
 
                     <label for="list.name" class="col-md-2 control-label">List Name (optional)</label>
                     <input type="text" id="list.name" name="List.{{ list.id }}.name" class="col-md-5 form-control"
-                           value="{% if list != "new" %}{{ list.name }}{% endif %}">
+                           value="{{ list.name if list != "new" }}">
                 </div>
 
                 </form>
@@ -42,14 +42,14 @@
                         <option value="">No Route</option>
                         {% for route in routes %}
                             <option value="{{ route.id }}" class="text-center"
-                                    {% if list.route_id == route.id %}selected{% endif %}>
+                                    {{ " selected" if list.route_id == route.id }}>
                                 {{ route.name }}
                             </option>
                         {% endfor %}
                     </select>
                     {% if list.route_id %}
                         <form name="route-edit" id="route-edit" method="get"
-                              action="/stores/{{ list.store.id }}/routes/{% if list.route_id %}{{ list.route_id }}{% endif %}">
+                              action="/stores/{{ list.store.id }}/routes{{ "/" + list.route_id|string if list.route_id }}">
                             <button type="submit" class="btn btn-primary btn-sm">Edit</button>
                         </form>
                     {% endif %}
@@ -87,7 +87,7 @@
                                     <select name="ListItem.{{ list_item.id }}.item_measurement_id" form="list-detail"  class="form-control text-center">
                                         {% for item_measurement in item_measurements %}
                                             <option value="{{ item_measurement.id }}" class="text-center"
-                                                    {% if list_item.item_measurement_id == item_measurement.id %}selected{% endif %}>
+                                                    {{ " selected" if list_item.item_measurement_id == item_measurement.id }}>
                                                 {{ item_measurement.name }}
                                             </option>
                                         {% endfor %}
@@ -98,7 +98,7 @@
                                     <select name="ListItem.{{ list_item.id }}.item_group_id" form="list-detail"  class="form-control">
                                         {% for route_group in route_groups %}
                                             <option value="{{ route_group.item_group.id }}"
-                                                    {% if list_item.item_group_id == route_group.item_group.id %}selected{% endif %}>
+                                                    {{ " selected" if list_item.item_group_id == route_group.item_group.id }}>
                                                 {{ route_group.item_group.name }}
                                             </option>
                                         {% endfor %}

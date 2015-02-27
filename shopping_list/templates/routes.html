@@ -27,7 +27,7 @@
                     <label for="route.name" class="col-md-2 control-label">Name</label>
                     <div class="form-group">
                         <div class="col-md-7"><input type="text" id="route.name" name="Route.{{ route.id }}.name" class="form-control"
-                                                     value="{% if route != "new" %}{{ route.name }}{% endif %}"></div>
+                                                     value="{{ route.name if route != "new" }}"></div>
                     </div>
 
                 </form>
@@ -47,7 +47,7 @@
                                     <select name="RouteGroup.{{ route_group.id }}.item_group_id" form="route-detail"  class="form-control">
                                         {% for item_group in item_groups %}
                                             <option value="{{ item_group.id }}"
-                                                    {% if route_group.item_group.id == item_group.id %}selected{% endif %}>{{ item_group.name }}
+                                                    {{ " selected" if route_group.item_group.id == item_group.id }}>{{ item_group.name }}
                                             </option>
                                         {% endfor %}
                                     </select>

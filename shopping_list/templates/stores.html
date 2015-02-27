@@ -19,51 +19,45 @@
                     <label for="store.name" class="col-md-3 control-label">Name</label>
                     <div class="form-group">
                         <div class="col-md-8"><input type="text" id="store.name" name="Store.{{ store.id }}.name" class="form-control"
-                                                     value="{% if store != "new" %}{{ store.name }}{% endif %}"></div>
+                                                     value="{{ store.name if store != "new" }}"></div>
                     </div>
 
                     <label for="nickname" class="col-md-3 control-label">Nickname</label>
                     <div class="form-group">
                         <div class="col-md-8"><input type="text" id="nickname"
                                                      name="UserStore.{% if store != "new" %}{{ store.user[0].user_id }}{% endif %} {{ store.id }}.nickname" class="form-control"
-                                                     value="{% if store != "new" %}{{ store.user[0].nickname }}{% endif %}"></div>
+                                                     value="{{ store.user[0].nickname if store != "new" }}"></div>
                     </div>
 
                     <label for="store.street_address" class="col-md-3 control-label">Street Address</label>
                     <div class="form-group">
                         <div class="col-md-8"><input type="text" id="store.street_address" name="Store.{{ store.id }}.street_address" class="form-control"
-                                                     value="{% if store != "new" %}{{ store.street_address }}{% endif %}"></div>
+                                                     value="{{ store.street_address if store != "new" }}"></div>
                     </div>
 
                     <label for="store.city" class="col-md-3 control-label">City</label>
                     <div class="form-group">
                         <div class="col-md-8"><input type="text" id="store.city" name="Store.{{ store.id }}.city" class="form-control"
-                                                     value="{% if store != "new" %}{{ store.city }}{% endif %}"></div>
+                                                     value="{{ store.city if store != "new" }}"></div>
                     </div>
 
                     <label for="store.state" class="col-md-3 control-label">State</label>
                     <div class="form-group">
                         <div class="col-md-8"><input type="text" id="store.state" name="Store.{{ store.id }}.state" class="form-control"
-                                                     value="{% if store != "new" %}{{ store.state }}{% endif %}"></div>
+                                                     value="{{ store.state if store != "new" }}"></div>
                     </div>
 
                     <label for="store.postal_code" class="col-md-3 control-label">Zip Code</label>
                     <div class="form-group">
                         <div class="col-md-8"><input type="text" id="store.postal_code" name="Store.{{ store.id }}.postal_code" class="form-control"
-                                                     value="{% if store != "new" %}{{ store.postal_code }}{% endif %}"></div>
+                                                     value="{{ store.postal_code if store != "new" }}"></div>
                     </div>
 
                     <label for="store.country" class="col-md-3 control-label">Country</label>
                     <div class="form-group">
                         <div class="col-md-8"><input type="text" id="store.country" name="Store.{{ store.id }}.country" class="form-control"
-                                                     value="{% if store != "new" %}{{ store.country }}{% endif %}"></div>
+                                                     value="{{ store.country if store != "new" }}"></div>
                     </div>
-
-{#                    <label for="store.default" class="col-md-3 control-label">Default</label>#}
-{#                    <div class="form-group">#}
-{#                        <div class="col-md-2"><input type="checkbox" id="store.default" name="UserStore.{{ store.id }}.default" class="form-control"#}
-{#                                                     {% if store != "new" %}{% if store.default %}checked{% endif %}{% endif %}></div>#}
-{#                    </div>#}
 
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-6">
