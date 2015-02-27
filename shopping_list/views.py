@@ -261,7 +261,29 @@ def store_update(store_id):
     flash("Successfully updated store", "success")
     return redirect(url_for("store_get", store_id=user_store.store_id))
 
-# TODO: Default value not passing through form
+
+@app.route("/stores/<store_id>/delete", methods=["POST", "DELETE"])
+@login_required
+def store_delete(store_id):
+    """ Delete existing store
+
+    Return:
+        Stores page
+    """
+
+    # Set UserStore record
+    user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
+                                                 UserStore.store_id == store_id).first()
+    # Test whether UserStore record exists
+    if not user_store:
+        flash("Could not find store with id {} for current user".format(UserStore.store_id), "danger")
+        return redirect(url_for("store_get"))
+
+    session.delete(user_store)
+    session.commit()
+
+    flash("Successfully deleted store", "success")
+    return redirect(url_for("store_get"))
 
 
 @app.route("/routes", methods=["GET"])

@@ -58,13 +58,19 @@
                         <div class="col-md-8"><input type="text" id="store.country" name="Store.{{ store.id }}.country" class="form-control"
                                                      value="{{ store.country if store != "new" }}"></div>
                     </div>
-
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-6">
-                            <button type="submit" class="btn btn-primary center-block">Update Store</button>
-                        </div>
-                    </div>
                 </form>
+                <div class="form-group form-inline">
+                    <div class="col-md-12">
+                        <button type="submit" form="store-detail" class="btn btn-primary center-block">Update Store</button>
+                    </div>
+                    <div class="pull-right">
+                        <form name="store-delete" id="store-delete" method="post"
+                                      action="/stores/{{ store.id }}/delete">
+                            <button type="submit" class="btn btn-danger center-block">Delete Store</button>
+                        </form>
+                    </div>
+                </div>
+
             {% endif %}
         </div>
     </div>
