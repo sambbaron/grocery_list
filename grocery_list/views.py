@@ -570,3 +570,41 @@ def list_put(store_id, list_id):
 
     flash("Successfully updated list", "success")
     return redirect(request.url)
+
+
+@app.route("/lists/<list_id>/listitems/new", methods=["POST"])
+@login_required
+def list_item_post(list_id):
+    """ Add new List Item to existing List
+
+    Return:
+        List page
+    """
+    list_item = ListItem(item_name="New Item", list_id=list_id)
+    session.add(list_item)
+    session.commit()
+
+    flash("Successfully added list item", "success")
+    return list_get(list_id=list_id)
+
+
+@app.route("/lists/<list_id>/listitems/<list_item_id>/delete", methods=["POST"])
+@login_required
+def list_item_delete(list_id, list_item_id):
+    """ Delete List Item from existing List
+
+    Return:
+        List page
+    """
+    list_item = session.query(ListItem).get(list_item_id)
+
+    # Test whether ListItem record exists
+    if not list_item:
+        flash("Could not find list item record with id {}".format(list_item_id), "danger")
+        return list_get(list_id=list_id)
+
+    session.delete(list_item)
+    session.commit()
+
+    flash("Successfully deleted list item", "success")
+    return list_get(list_id=list_id)
