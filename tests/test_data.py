@@ -119,7 +119,7 @@ def add_route_group():
         add_item_group()
 
     # Add first five Item Groups to test Route
-    for n in range(1, 6):
+    for n in range(1, 7):
         session.add(RouteGroup(route_id=1, item_group_id=n, route_order=n))
 
     session.commit()
@@ -154,8 +154,8 @@ def add_list():
 def add_item_measurement():
     """ Add Test Item Measurements """
 
-    measurement_name_list = ["pounds", "ounces", "each", "pack", "cans"]
-    measurement_abbrev_list = ["lbs", "oz", "ea", "pack", "can"]
+    measurement_name_list = ["pounds", "ounces", "each", "pack", "cans", "dozen"]
+    measurement_abbrev_list = ["lbs", "oz", "ea", "pack", "can", "doz"]
     for measurement in measurement_name_list:
         i = measurement_name_list.index(measurement)
         item_measurement = ItemMeasurements(name=measurement,
@@ -177,18 +177,30 @@ def add_list_item():
     if session.query(ItemGroup).get(1) is None:
         add_item_group()
 
-    item1 = ListItem(item_name="Onion",
-                     item_notes="Yellow",
-                     item_quantity=3,
-                     list_id=1,
-                     item_measurement_id=3,
-                     item_group_id=1)
-    item2 = ListItem(item_name="Steak",
+    item1 = ListItem(item_name="Steak",
                      item_notes="Organic",
                      item_quantity=1,
-                     list_id=1,
+                     list_id=2,
                      item_measurement_id=1,
                      item_group_id=5)
+    item2 = ListItem(item_name="Eggs",
+                     item_notes="Large",
+                     item_quantity=1,
+                     list_id=2,
+                     item_measurement_id=6,
+                     item_group_id=4)
+    item3 = ListItem(item_name="Tomato Sauce",
+                     item_notes="Muir Glen",
+                     item_quantity=28,
+                     list_id=2,
+                     item_measurement_id=2,
+                     item_group_id=6)
+    item4 = ListItem(item_name="Onion",
+                     item_notes="Yellow",
+                     item_quantity=3,
+                     list_id=2,
+                     item_measurement_id=3,
+                     item_group_id=1)
 
-    session.add_all([item1, item2])
+    session.add_all([item1, item2, item3, item4])
     session.commit()
