@@ -15,9 +15,21 @@
                 <h3>Shopping List App</h3>
             </div>
             <ul class="nav navbar-nav center-block" style="margin-left: 10em;">
-                <li><a href="/stores"><button type="button" class="btn btn-default btn-lg navbar-btn">Stores</button></a></li>
-                <li><a href="/routes"><button type="button" class="btn btn-default btn-lg navbar-btn">Routes</button></a></li>
-                <li><a href="/lists"><button type="button" class="btn btn-default btn-lg navbar-btn">Lists</button></a></li>
+                <li>
+                    <a href="/stores">
+                        <button type="button" class="btn btn-default btn-lg navbar-btn{{ " active" if view == "store" }}">Stores</button>
+                    </a>
+                </li>
+                <li>
+                    <a href="/routes">
+                        <button type="button" class="btn btn-default btn-lg navbar-btn{{ " active" if view == "route" }}">Routes</button>
+                    </a>
+                </li>
+                <li>
+                    <a href="/lists">
+                        <button type="button" class="btn btn-default btn-lg navbar-btn{{ " active" if view == "list" }}">Lists</button>
+                    </a>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_anonymous() == True %}

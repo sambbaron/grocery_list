@@ -2,10 +2,10 @@
 {# List of Stores #}
 {% macro stores_list(link_endpoint="") -%}
     <div id="stores-list list-group">
-        {% for store in stores %}
-            <a class="list-group-item"
-               href="/stores/{{ store.store.id }}{% if link_endpoint %}/{% endif %}{{ link_endpoint }}">
-                {{ store.nickname }}
+        {% for store_list in stores %}
+            <a class="list-group-item{{ " active" if store_list.store.id == store.id }}"
+               href="/stores/{{ store_list.store.id }}{{ "/" if link_endpoint }}{{ link_endpoint }}">
+                {{ store_list.nickname }}
             </a>
         {% endfor %}
     </div>

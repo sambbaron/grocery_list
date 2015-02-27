@@ -195,7 +195,7 @@ def store_get(store_id=None):
         # Set Store object using provided id
         store = session.query(Store).get(store_id)
 
-    return render_template("stores.html", stores=stores, store=store)
+    return render_template("stores.html", view="store", stores=stores, store=store)
 
 
 @app.route("/stores/new", methods=["POST"])
@@ -326,7 +326,8 @@ def route_get(store_id=None, route_id=None):
     # Set Item Groups list for form input selection
     item_groups = session.query(ItemGroup).all()
 
-    return render_template("routes.html", stores=stores, store=store,
+    return render_template("routes.html", view="route",
+                           stores=stores, store=store,
                            routes=routes, route=route,
                            route_groups=route_groups, item_groups=item_groups)
 
@@ -526,7 +527,8 @@ def list_get(store_id=None, list_id=None):
     # Set Item Measurements for form input selection
     item_measurements = session.query(ItemMeasurements).order_by(ItemMeasurements.id).all()
 
-    return render_template("lists.html", stores=stores, store=store,
+    return render_template("lists.html", view="list",
+                           stores=stores, store=store,
                            routes=routes,
                            lists=lists, list=list,
                            list_items=list_items,

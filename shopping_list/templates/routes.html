@@ -10,8 +10,9 @@
             <br>
             <h3 class="text-center">Route List</h3>
             <div id="routes-list list-group">
-                {% for route in routes %}
-                    <a class="list-group-item" href="/stores/{{ store.id }}/routes/{{ route.id }}">{{ route.name }}</a>
+                {% for route_list in routes %}
+                    <a class="list-group-item{{ " active" if route_list.id == route.id }}"
+                       href="/stores/{{ store.id }}/routes/{{ route_list.id }}">{{ route_list.name }}</a>
                 {% endfor %}
             </div>
             <br>
