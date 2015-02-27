@@ -208,7 +208,7 @@ class List(Base):
     __tablename__ = "list"
 
     id = Column(Integer, primary_key=True)
-    shop_date = Column(Date, nullable=False)
+    shop_date = Column(Date, nullable=False, default=datetime.date.today())
     name = Column(String(50))
 
     user_id = Column(Integer, ForeignKey("user.id"), index=True)
