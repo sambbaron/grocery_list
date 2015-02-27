@@ -410,6 +410,9 @@ def route_group_post(route_id):
 
     route = session.query(Route).get(route_group.route_id)
 
+    # Renumber route order
+    route.renumber_route_order()
+
     flash("Successfully added route group", "success")
     return redirect(url_for("route_get",
                         store_id=route.store[0].id, route_id=route_id))
@@ -424,15 +427,19 @@ def route_group_delete(route_id, route_group_id):
         Route page
     """
     route_group = session.query(RouteGroup).get(route_group_id)
-    route = session.query(Route).get(route_group.route_id)
 
     # Test whether RouteGroup record exists
     if not route_group:
         flash("Could not find route group record with id {}".format(route_group_id), "danger")
         return route_get(route_id=route_id)
 
+    route = session.query(Route).get(route_group.route_id)
+
     session.delete(route_group)
     session.commit()
+
+    # Renumber route order
+    route.renumber_route_order()
 
     flash("Successfully deleted route group", "success")
     return redirect(url_for("route_get",

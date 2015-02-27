@@ -112,17 +112,22 @@ class Route(Base):
     list = relationship("List", backref="route")
 
     def renumber_route_order(self):
-        """ Renumber route order to remove duplicates
+        """ Renumber route order for Route Groups associated with Route
 
         Return:
             Nothing
         """
+        # Set Route Groups using Route id
+        route_groups = session.query(RouteGroup).filter(RouteGroup.route_id == self.id)\
+            .order_by(RouteGroup.route_order)
+
         i = 1
         # Loop through Groups in Route
-        for route_group in self.item_group:
+        for route_group in route_groups:
             route_group.route_order = i
             i += 1
-        return
+
+        return session.commit()
 
 
 # Routes assigned to Stores
