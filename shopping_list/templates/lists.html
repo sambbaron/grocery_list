@@ -64,12 +64,17 @@
                     <h4 class="text-center">List Items</h4>
                     <table class="table table-bordered table-condensed">
                         <tr>
-                            <th class="col-md-3 text-center">Item Name</th>
+                            <th class="col-md-3 text-center">
+                                Item Name
+                                <form name="listitem-add" id="listitem-add" method="post" action="/lists/{{ list.id }}/listitems/new">
+                                    <button type="submit" class="btn btn-warning btn-xs">New Item</button>
+                                </form>
+                            </th>
                             <th class="col-md-3 text-center">Detail/Brand</th>
                             <th class="col-md-1 text-center">Quantity</th>
                             <th class="col-md-2 text-center">Measurement</th>
                             <th class="col-md-3 text-center">Group Name</th>
-                            <th></th>
+                            <th class="col-md-1 text-center"></th>
                         </tr>
                         {% for list_item in list_items %}
                             <tr>
@@ -107,25 +112,22 @@
 
                                 <form name="listitem-delete" id="listitem-delete" method="post"
                                       action="/lists/{{ list.id }}/listitems/{{ list_item.id }}/delete">
-                                    <td><button type="submit" class="btn btn-danger btn-sm center-block">Delete Item</button></td>
+                                    <td><button type="submit" class="btn btn-danger btn-xs center-block">Delete<br/>Item</button></td>
                                 </form>
 
                             </tr>
                         {% endfor %}
                     </table>
-                    <form name="listitem-add" id="listitem-add" method="post" action="/lists/{{ list.id }}/listitems/new">
-                        <button type="submit" class="btn btn-danger btn-sm">New Item</button>
-                    </form>
                 </div>
                 {% endif %}
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-8">
-                        <button type="submit" form="list-detail" class="btn btn-primary center-block">Update List</button>
+                        <button type="submit" form="list-detail" class="btn btn-success btn-lg center-block">Update List</button>
                     </div>
                     <div class="pull-right">
                         <form name="list-delete" id="list-delete" method="post"
                                       action="/stores/{{ store.id }}/lists/{{ list.id }}/delete">
-                            <button type="submit" class="btn btn-danger center-block">Delete List</button>
+                            <button type="submit" class="btn btn-danger center-block">Delete<br/>List</button>
                         </form>
                     </div>
                 </div>

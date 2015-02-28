@@ -37,9 +37,14 @@
                     <h4 class="text-center">Item Groups</h4>
                     <table class="table table-bordered table-condensed">
                         <tr>
-                            <th class="col-md-6 text-center">Group Name</th>
+                            <th class="col-md-9 text-center">Group Name
+                                <form name="routegroup-add" id="routegroup-add" method="post"
+                                action="/routes/{{ route.id }}/routegroups/new">
+                                    <button type="submit" class="btn btn-warning btn-xs">New Group</button>
+                                </form>
+                            </th>
                             <th class="col-md-2 text-center">Sort Order</th>
-                            <th></th>
+                            <th class="col-md-1 text-center"></th>
                         </tr>
                         {% for route_group in route_groups %}
                             <tr>
@@ -56,24 +61,23 @@
                                            value="{{ route_group.route_order }}"></td>
                                 <form name="routegroup-delete" id="routegroup-delete" method="post"
                                       action="/routes/{{ route.id }}/routegroups/{{ route_group.id }}/delete">
-                                    <td><button type="submit" class="btn btn-danger btn-sm center-block">Delete Group</button></td>
+                                    <td><button type="submit" class="btn btn-danger btn-xs center-block">Delete<br/>Group</button></td>
                                 </form>
                             </tr>
                         {% endfor %}
                     </table>
-                    <form name="routegroup-add" id="routegroup-add" method="post" action="/routes/{{ route.id }}/routegroups/new">
-                        <button type="submit" class="btn btn-danger btn-sm">New Group</button>
-                    </form>
+
+
                 </div>
                 {% endif %}
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-8">
-                        <button type="submit" form="route-detail" class="btn btn-primary center-block">Update Route</button>
+                        <button type="submit" form="route-detail" class="btn btn-success btn-lg center-block">Update Route</button>
                     </div>
                     <div class="pull-right">
                         <form name="route-delete" id="route-delete" method="post"
                                       action="/stores/{{ store.id }}/routes/{{ route.id }}/delete">
-                            <button type="submit" class="btn btn-danger center-block">Delete Route</button>
+                            <button type="submit" class="btn btn-danger center-block">Delete<br/>Route</button>
                         </form>
                     </div>
                 </div>
