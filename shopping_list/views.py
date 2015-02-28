@@ -418,6 +418,29 @@ def route_update(store_id, route_id):
                             store_id=route.store[0].id, route_id=route.id))
 
 
+@app.route("/stores/<int:store_id>/routes/<int:route_id>/delete", methods=["POST", "DELETE"])
+@login_required
+def route_delete(store_id, route_id):
+    """ Delete existing Route
+
+    Return:
+        Routes page
+    """
+    # Set Route record
+    route = session.query(Route).get(route_id)
+
+    # Test whether Route record exists
+    if not route:
+        flash("Could not find route with id {}".format(route_id), "danger")
+        return redirect(url_for("route_get"))
+
+    session.delete(route)
+    session.commit()
+
+    flash("Successfully deleted route", "success")
+    return redirect(url_for("route_get"))
+
+
 @app.route("/routes/<int:route_id>/routegroups/new", methods=["POST"])
 @login_required
 def route_group_add(route_id):

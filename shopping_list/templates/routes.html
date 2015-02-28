@@ -70,6 +70,12 @@
                     <div class="col-md-offset-2 col-md-8">
                         <button type="submit" form="route-detail" class="btn btn-primary center-block">Update Route</button>
                     </div>
+                    <div class="pull-right">
+                        <form name="route-delete" id="route-delete" method="post"
+                                      action="/stores/{{ store.id }}/routes/{{ route.id }}/delete">
+                            <button type="submit" class="btn btn-danger center-block">Delete Route</button>
+                        </form>
+                    </div>
                 </div>
             {% endif %}
         </div>
