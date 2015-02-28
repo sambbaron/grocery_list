@@ -647,6 +647,30 @@ def list_update(store_id, list_id):
                             list_id=list.id))
 
 
+@app.route("/stores/<int:store_id>/lists/<list_id>/delete", methods=["POST", "DELETE"])
+@login_required
+def list_delete(store_id, list_id):
+    """ Delete existing List
+
+    Return:
+        Lists page
+    """
+    # Set Route record
+    list = session.query(List).get(list_id)
+
+    # Test whether Route record exists
+    if not list:
+        flash("Could not find list with id {}".format(list_id), "danger")
+        return redirect(url_for("list_get"))
+
+    session.query(ListItem).filter(ListItem.list_id == list_id).delete()
+    session.delete(list)
+    session.commit()
+
+    flash("Successfully deleted list", "success")
+    return redirect(url_for("list_get"))
+
+
 @app.route("/lists/<list_id>/listitems/new", methods=["POST"])
 @login_required
 def list_item_add(list_id):

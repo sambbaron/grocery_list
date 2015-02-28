@@ -122,6 +122,12 @@
                     <div class="col-md-offset-2 col-md-8">
                         <button type="submit" form="list-detail" class="btn btn-primary center-block">Update List</button>
                     </div>
+                    <div class="pull-right">
+                        <form name="list-delete" id="list-delete" method="post"
+                                      action="/stores/{{ store.id }}/lists/{{ list.id }}/delete">
+                            <button type="submit" class="btn btn-danger center-block">Delete List</button>
+                        </form>
+                    </div>
                 </div>
             {% endif %}
         </div>
