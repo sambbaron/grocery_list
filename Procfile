@@ -1,1 +1,1 @@
-web: gunicorn shopping--list:app
+web: gunicorn shopping_list:app
