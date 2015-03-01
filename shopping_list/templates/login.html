@@ -1,16 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Login</h2>
-
-<form method="POST" class="form-group">
-    <label for="email" class="control-label">Email address</label>
-    <input type="email" class="form-control" name="email" placeholder="Email address" required>
-    <br>
-    <label for="password" class="control-label">Password</label>
-    <input type="password" class="form-control" name="password" placeholder="Password" required>
-    <br>
-    <button type="submit" class="btn btn-primary"">Submit</button>
-</form>
+<div class="col-md-offset-3 col-md-6">
+    <h3 class="text-center">Login</h3>
+    <form method="POST" class="form-group">
+        <label for="email" class="control-label">Email address</label>
+        <input type="email" class="form-control" name="email" placeholder="Email address" required>
+        <br>
+        <label for="password" class="control-label">Password</label>
+        <input type="password" class="form-control" name="password" placeholder="Password" required>
+        <br>
+        <button type="submit" class="btn btn-md btn-success center-block">Login</button>
+    </form>
+    <br/>
+    <br/>
+    <a href="/profile">
+        <button type="submit" class="btn btn-lg btn-success center-block">Signup</button>
+    </a>
+</div>
 
 {% endblock %}
