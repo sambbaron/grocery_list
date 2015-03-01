@@ -61,14 +61,18 @@
                 </form>
                 <div class="form-group form-inline">
                     <div class="col-md-12">
-                        <button type="submit" form="store-detail" class="btn btn-success btn-lg center-block">Update Store</button>
+                        <button type="submit" form="store-detail" class="btn btn-success btn-lg center-block">
+                            {{ "Create Store" if store == "new" else "Update Store" }}
+                        </button>
                     </div>
+                    {% if store != "new" %}
                     <div class="pull-right">
                         <form name="store-delete" id="store-delete" method="post"
                                       action="/stores/{{ store.id }}/delete">
                             <button type="submit" class="btn btn-danger">Delete<br/>Store</button>
                         </form>
                     </div>
+                    {% endif %}
                 </div>
 
             {% endif %}

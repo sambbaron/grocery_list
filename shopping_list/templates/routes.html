@@ -72,14 +72,18 @@
                 {% endif %}
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-8">
-                        <button type="submit" form="route-detail" class="btn btn-success btn-lg center-block">Update Route</button>
+                        <button type="submit" form="route-detail" class="btn btn-success btn-lg center-block">
+                            {{ "Create Route" if route == "new" else "Update Route" }}
+                        </button>
                     </div>
+                    {% if route != "new" %}
                     <div class="pull-right">
                         <form name="route-delete" id="route-delete" method="post"
                                       action="/stores/{{ store.id }}/routes/{{ route.id }}/delete">
                             <button type="submit" class="btn btn-danger center-block">Delete<br/>Route</button>
                         </form>
                     </div>
+                    {% endif %}
                 </div>
             {% endif %}
         </div>
