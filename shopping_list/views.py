@@ -181,6 +181,10 @@ def store_get(store_id=None):
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id())\
         .order_by(UserStore.store_id).all()
 
+    # If no stores, then return empty template
+    if len(stores) == 0:
+        return render_template("stores.html", view="store", stores=stores, store="new")
+
     # Set selected Store
     # New Store requested
     if request.path.find("/stores/new") > -1:
