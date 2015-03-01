@@ -25,10 +25,10 @@ def index():
 
     # Redirect to Lists if exist
     if session.query(List.id).filter(List.user_id == user_id).first() is not None:
-        return redirect(url_for("lists"))
+        return redirect(url_for("list_get"))
     # Redirect to Routes if exist
     elif session.query(Route.id).filter(List.user_id == user_id).first() is not None:
-        return redirect(url_for("routes"))
+        return redirect(url_for("route_get"))
     # Else redirect to Stores
     else:
         return redirect(url_for("store_get"))
@@ -122,7 +122,7 @@ def profile_add():
 
     login_user(user)
     flash("Successfully created user profile", "success")
-    return redirect(url_for("stores"))
+    return redirect(url_for("store_get"))
 
 
 @app.route("/profile/<user_id>", methods=["PUT", "POST"])
