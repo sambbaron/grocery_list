@@ -16,7 +16,6 @@ app.config.from_object(config_path)
 
 # Import modules
 from . import login
-from . import api
 from . import views
 from . import utils
 
