@@ -65,6 +65,7 @@ def login():
 def logout():
     """ Returns: Login page """
     logout_user()
+    flash("Logged out successfully. Come back soon.", "success")
     return redirect(url_for("login"))
 
 
