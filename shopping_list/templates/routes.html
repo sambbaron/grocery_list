@@ -37,14 +37,14 @@
                     <h4 class="text-center">Item Groups</h4>
                     <table class="table table-bordered table-condensed">
                         <tr>
-                            <th class="col-md-9 text-center">Group Name
+                            <th class="text-center" style="width:75%">Group Name
                                 <form name="routegroup-add" id="routegroup-add" method="post"
                                 action="/routes/{{ route.id }}/routegroups/new">
                                     <button type="submit" class="btn btn-warning btn-xs">New Group</button>
                                 </form>
                             </th>
-                            <th class="col-md-2 text-center">Sort Order</th>
-                            <th class="col-md-1 text-center"></th>
+                            <th class="text-center" style="width:15%">Sort Order</th>
+                            <th class="text-center" style="width:10%"></th>
                         </tr>
                         {% for route_group in route_groups %}
                             <tr>

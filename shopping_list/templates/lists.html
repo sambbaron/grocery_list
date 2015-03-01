@@ -64,17 +64,17 @@
                     <h4 class="text-center">List Items</h4>
                     <table class="table table-bordered table-condensed">
                         <tr>
-                            <th class="col-md-3 text-center">
+                            <th class="text-center" style="width: 25%">
                                 Item Name
                                 <form name="listitem-add" id="listitem-add" method="post" action="/lists/{{ list.id }}/listitems/new">
                                     <button type="submit" class="btn btn-warning btn-xs">New Item</button>
                                 </form>
                             </th>
-                            <th class="col-md-3 text-center">Detail/Brand</th>
-                            <th class="col-md-1 text-center">Quantity</th>
-                            <th class="col-md-2 text-center">Measurement</th>
-                            <th class="col-md-3 text-center">Group Name</th>
-                            <th class="col-md-1 text-center"></th>
+                            <th class="text-center" style="width: 25%">Detail/Brand</th>
+                            <th class="text-center" style="width: 5%">Quantity</th>
+                            <th class="text-center" style="width: 15%">Measurement</th>
+                            <th class="text-center" style="width: 25%">Group Name</th>
+                            <th class="text-center" style="width: 5%"></th>
                         </tr>
                         {% for list_item in list_items %}
                             <tr>
