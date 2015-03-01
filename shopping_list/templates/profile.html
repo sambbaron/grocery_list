@@ -1,34 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h2>User Profile</h2>
+    <div class="col-md-offset-3 col-md-6">
+        <h3 class="text-center">User Profile</h3>
+        <form name="user-profile" id="user-profile" method="post"
+        action={% if current_user.is_anonymous() == True  %}"/profile/signup"{% else %}"/profile/{{ current_user.get_id() }}"{% endif %} >
+            <input type="hidden" name="_method" value={% if current_user.is_anonymous() == True  %}"post"{% else %}"put"{% endif %}/>
+            <fieldset class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" name="name" placeholder="Your Name (Optional)" value="{{ name }}">
+                <br>
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" name="email" placeholder="Email address" value="{{ email }}">
+            </fieldset>
+            <fieldset class="form-group">
+                {% if current_user.is_anonymous() == False  %}
+                <h4>Current Password is required; New Password is optional</h4>
+                <label for="password-current">Current Password</label>
+                <input type="password" class="form-control" name="password-current" placeholder="Current Password">
+                {% endif  %}
+                <br>
+                <label for="password-new">New Password</label>
+                <input type="password" class="form-control" name="password-new" placeholder="New Password">
+                <br>
+                <label for="password-new2">Reenter Password</label>
+                <input type="password" class="form-control" name="password-new2" placeholder="Reenter Password">
+            </fieldset>
 
-    <form name="user-profile" id="user-profile" method={% if current_user.is_anonymous() == True  %}"post"{% else %}"post"{% endif %}
-    action={% if current_user.is_anonymous() == True  %}"/profile/signup"{% else %}"/profile/{{ current_user.get_id() }}"{% endif %} >
-        <input type="hidden" name="_method" value={% if current_user.is_anonymous() == True  %}"post"{% else %}"put"{% endif %}/>
-        <fieldset class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" name="name" placeholder="Your Name (Optional)" value="{{ name }}">
             <br>
-            <label for="email">Email address</label>
-            <input type="email" class="form-control" name="email" placeholder="Email address" value="{{ email }}">
-        </fieldset>
-        <fieldset class="form-group">
-            <legend>Current Password is required; New Password is optional</legend>
-            <label for="password-current">Current Password</label>
-            <input type="password" class="form-control" name="password-current" placeholder="Current Password">
             <br>
-            <label for="password-new">New Password</label>
-            <input type="password" class="form-control" name="password-new" placeholder="New Password">
-            <br>
-            <label for="password-new2">Reenter Password</label>
-            <input type="password" class="form-control" name="password-new2" placeholder="Reenter Password">
-        </fieldset>
-
-        <br>
-        <br>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
+            <button type="submit" class="btn btn-lg btn-success center-block">{{ "Signup" if current_user.is_anonymous() == True else "Update Profile" }}</button>
+        </form>
+    </div>
 
 {% endblock %}
