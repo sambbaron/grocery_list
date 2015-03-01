@@ -9,38 +9,36 @@
     <title>Shopping List App</title>
 </head>
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header navbar-left">
-                <a href="/" class="navbar-link"><h3>Shopping List App</h3></a>
-            </div>
-            <ul class="nav navbar-nav center-block" style="margin-left: 10em;">
-                <li>
-                    <a href="/stores">
-                        <button type="button" class="btn btn-default btn-lg navbar-btn{{ " active" if view == "store" }}">Stores</button>
-                    </a>
-                </li>
-                <li>
-                    <a href="/routes">
-                        <button type="button" class="btn btn-default btn-lg navbar-btn{{ " active" if view == "route" }}">Routes</button>
-                    </a>
-                </li>
-                <li>
-                    <a href="/lists">
-                        <button type="button" class="btn btn-default btn-lg navbar-btn{{ " active" if view == "list" }}">Lists</button>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if current_user.is_anonymous() == True %}
-                    <li><a href="/profile"><button type="button" class="btn btn-default btn-md navbar-btn">Signup</button></a></li>
-                    <li><a href="/login"><button type="button" class="btn btn-default btn-md navbar-btn">Login</button></a></li>
-                {% else %}
-                    <li><a href="/profile"><button type="button" class="btn btn-default btn-md navbar-btn">Profile</button></a></li>
-                    <li><a href="/logout"><button type="button" class="btn btn-default btn-md navbar-btn">Logout</button></a></li>
-                {% endif %}
-            </ul>
+    <nav class="container-fluid navbar-default">
+        <div class="navbar-header navbar-left">
+            <a href="/" class="navbar-link"><h3>Shopping List App</h3></a>
         </div>
+        <ul class="nav navbar-nav" style="margin-left: 20%;">
+            <li>
+                <a href="/stores">
+                    <button type="button" class="btn btn-default btn-lg navbar-btn{{ " active" if view == "store" }}">Stores</button>
+                </a>
+            </li>
+            <li>
+                <a href="/routes">
+                    <button type="button" class="btn btn-default btn-lg navbar-btn{{ " active" if view == "route" }}">Routes</button>
+                </a>
+            </li>
+            <li>
+                <a href="/lists">
+                    <button type="button" class="btn btn-default btn-lg navbar-btn{{ " active" if view == "list" }}">Lists</button>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if current_user.is_anonymous() == True %}
+                <li><a href="/profile"><button type="button" class="btn btn-default btn-md navbar-btn">Signup</button></a></li>
+                <li><a href="/login"><button type="button" class="btn btn-default btn-md navbar-btn">Login</button></a></li>
+            {% else %}
+                <li><a href="/profile"><button type="button" class="btn btn-default btn-md navbar-btn">Profile</button></a></li>
+                <li><a href="/logout"><button type="button" class="btn btn-default btn-md navbar-btn">Logout</button></a></li>
+            {% endif %}
+        </ul>
     </nav>
     <div id="message">
         {% with messages = get_flashed_messages(with_categories=true) %}
