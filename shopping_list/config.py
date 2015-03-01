@@ -3,11 +3,11 @@
 import os
 
 
-class HerokuConfig(object):
+class ProductionConfig(object):
     """Heroku Configuration"""
-    SQLALCHEMY_DATABASE_URI = "postgres://whjpwdpzmdwrhc:4ebb7mC0iWfPVHW5FYBjKGH9uk@ec2-23-23-180-133.compute-1.amazonaws.com:5432/d3p4q8u138oe1m"
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     DEBUG = False
-    SECRET_KEY = os.urandom(32)
+    SECRET_KEY = os.environ.get("MY_SECRET_KEY")
 
 
 class DevelopmentConfig(object):
