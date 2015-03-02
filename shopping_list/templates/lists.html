@@ -125,6 +125,12 @@
                         <button type="submit" form="list-detail" class="btn btn-success btn-lg center-block">
                             {{ "Create List" if list == "new" else "Update List" }}
                         </button>
+                        <br/>
+                        <a href="/stores/{{ store.id }}/lists/{{ list.id }}/print" target="_blank">
+                            <button type="button" class="btn btn-info btn-lg center-block">
+                                Printable/Viewable List
+                            </button>
+                        </a>
                     </div>
                     {% if list != "new" %}
                     <div class="pull-right">

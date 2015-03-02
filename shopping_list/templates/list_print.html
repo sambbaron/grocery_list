@@ -1,0 +1,25 @@
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<title>Shopping List</title>
+<div class="container-fluid pull-left" style="width:40%">
+    <h4 class="text-center">{{ store.user[0].nickname if store.user[0].nickname else store.name }}</h4>
+    <h4 class="text-center">{{ list.date_name() }}</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th class="text-center" style="width: 30%">Item Name</th>
+            <th class="text-center" style="width: 30%">Detail/Brand</th>
+            <th class="text-center" style="width: 5%">Qty</th>
+            <th class="text-center" style="width: 15%">Measure</th>
+            <th class="text-center" style="width: 20%">Group</th>
+        </tr>
+        {% for list_item in list_items %}
+            <tr>
+                <td>{{ list_item.item_name }}</td>
+                <td>{{ list_item.item_notes }}</td>
+                <td class="text-center">{{ list_item.item_quantity }}</td>
+                <td class="text-center">{{ list_item.item_measurement_name }}</td>
+                <td>{{ list_item.item_group_name }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>

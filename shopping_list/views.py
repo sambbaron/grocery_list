@@ -719,3 +719,54 @@ def list_item_delete(list_id, list_item_id):
     return redirect(url_for("list_get",
                             store_id=list.store_id,
                             list_id=list.id))
+
+
+@app.route("/stores/<int:store_id>/lists/<list_id>/print", methods=["GET"])
+@login_required
+def list_print_get(store_id, list_id):
+    """ Retrieve viewable/printable List
+
+    Return:
+        list_print.html template
+    """
+    # Set Store object using provided id
+    store = session.query(Store).get(store_id)
+
+    # Set List object using provided id
+    list = session.query(List).get(list_id)
+
+    # Set Route and List Items data
+    list_items = {}
+    route_groups = {}
+    if list:
+
+        # Retrieve List Items associated with List (query object)
+        list_items_q = session.query(ListItem, ItemMeasurements.name.label("item_measurement_name"), ItemGroup.name.label("item_group_name"))\
+            .join(ItemMeasurements)\
+            .join(ItemGroup)\
+            .filter(ListItem.list_id == list.id)
+
+        # If List has associated Route
+        if list.route_id:
+
+            # Retrieve related Route Groups for List Item ordering (query object)
+            route_groups_q = session.query(RouteGroup).filter(RouteGroup.route_id == list.route_id) \
+                .order_by(RouteGroup.route_order)
+
+            # Retrieve related List Items with route group order
+            list_items_sq = list_items_q.subquery()
+            route_groups_sq = route_groups_q.subquery()
+            list_items_q = session.query(list_items_sq) \
+                .outerjoin(route_groups_sq, list_items_sq.c.item_group_id == route_groups_sq.c.item_group_id) \
+                .order_by(route_groups_sq.c.route_order)
+
+            # Return Route Group rows for template
+            route_groups = route_groups_q.all()
+
+        # Return List Item rows for template
+        list_items = list_items_q.all()
+
+    return render_template("list_print.html", view="list",
+                           store=store,
+                           list=list,
+                           list_items=list_items)
