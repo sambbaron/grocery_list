@@ -90,6 +90,7 @@
 
                                 <td>
                                     <select name="ListItem.{{ list_item.id }}.item_measurement_id" form="list-detail"  class="form-control text-center">
+                                        <option></option>
                                         {% for item_measurement in item_measurements %}
                                             <option value="{{ item_measurement.id }}" class="text-center"
                                                     {{ " selected" if list_item.item_measurement_id == item_measurement.id }}>
@@ -101,6 +102,7 @@
 
                                 <td>
                                     <select name="ListItem.{{ list_item.id }}.item_group_id" form="list-detail"  class="form-control">
+                                        <option></option>
                                         {% for route_group in route_groups %}
                                             <option value="{{ route_group.item_group.id }}"
                                                     {{ " selected" if list_item.item_group_id == route_group.item_group.id }}>

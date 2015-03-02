@@ -50,6 +50,7 @@
                             <tr>
                                 <td>
                                     <select name="RouteGroup.{{ route_group.id }}.item_group_id" form="route-detail"  class="form-control">
+                                        <option></option>
                                         {% for item_group in item_groups %}
                                             <option value="{{ item_group.id }}"
                                                     {{ " selected" if route_group.item_group.id == item_group.id }}>{{ item_group.name }}
