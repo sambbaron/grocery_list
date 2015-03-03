@@ -1,12 +1,14 @@
 """ Management Scripts """
 
 import os
+import json
 
 from flask.ext.script import Manager
 
 from shopping_list import app
 
 from shopping_list.database import Base, engine
+from shopping_list import models
 from tests import test_data
 
 manager = Manager(app)
@@ -36,6 +38,25 @@ def seed_data():
     test_data.add_all()
     print("Seed data added.")
 
+@manager.command
+def preload_data():
+    """ Add all preloaded default data to production database
+
+        Retrieve from preload_data.json file
+        Schema: {Model Name: [Values Dictionary]}
+    """
+
+    resetdb()
+
+    root_path = os.path.dirname(os.path.realpath(__file__))
+    with open(root_path + "/shopping_list/preload_data.json") as data_file:
+        data = json.load(data_file)
+
+    for model_name, values_dict in sorted(data.items()):
+        table = getattr(getattr(models, model_name),"__table__")
+        ins = getattr(table, "insert")().values(values_dict)
+        engine.execute(ins)
+        print("{} data added.".format(model_name))
 
 if __name__ == "__main__":
     manager.run()
