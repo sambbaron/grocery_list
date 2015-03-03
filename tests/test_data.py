@@ -81,16 +81,20 @@ def add_route():
     # Set related store
     store1 = session.query(Store).filter(Store.id == 1).all()
 
-    route1 = Route(name="Full Shop",
-                   default=True,
-                   user_id=1,
-                   store=store1)
-    route2 = Route(name="Quick Shop",
+    route1 = Route(name="Default",
+                   default=True)
+    session.add(route1)
+    route2 = Route(name="Full Shop",
                    default=False,
                    user_id=1,
                    store=store1)
+    session.add(route2)
+    route3 = Route(name="Quick Shop",
+                   default=False,
+                   user_id=1,
+                   store=store1)
+    session.add(route3)
 
-    session.add_all([route1, route2])
     session.commit()
 
 
@@ -120,12 +124,12 @@ def add_route_group():
 
     # Add first six Item Groups ascending to first test Route
     for n in range(1, 7):
-        session.add(RouteGroup(route_id=1, item_group_id=n, route_order=n))
+        session.add(RouteGroup(route_id=2, item_group_id=n, route_order=n))
 
     # Add first six Item Groups descending to second test Route
     r = 1
     for n in range(6, 0, -1):
-        session.add(RouteGroup(route_id=2, item_group_id=n, route_order=r))
+        session.add(RouteGroup(route_id=3, item_group_id=n, route_order=r))
         r += 1
 
     session.commit()
@@ -147,11 +151,11 @@ def add_list():
     list1 = List(shop_date=datetime.date.today(),
                  user_id=1,
                  store_id=1,
-                 route_id=1)
+                 route_id=2)
     list2 = List(shop_date=datetime.date.today() + datetime.timedelta(days=7),
                  user_id=1,
                  store_id=1,
-                 route_id=1)
+                 route_id=3)
 
     session.add_all([list1, list2])
     session.commit()
