@@ -66,9 +66,11 @@
                         <tr>
                             <th class="text-center" style="width: 25%">
                                 Item Name
-                                <form name="listitem-add" id="listitem-add" method="post" action="/lists/{{ list.id }}/listitems/new">
-                                    <button type="submit" class="btn btn-warning btn-xs">New Item</button>
-                                </form>
+                                <br/>
+                                <button type="submit" class="btn btn-warning btn-xs"
+                                        onclick=postFormData("/stores/{{ store.id }}/lists/{{ list.id }}/listitems/new","list-detail",responseRedirect)>
+                                    New Item
+                                </button>
                             </th>
                             <th class="text-center" style="width: 25%">Detail/Brand</th>
                             <th class="text-center" style="width: 5%">Quantity</th>
@@ -112,10 +114,12 @@
                                     </select>
                                 </td>
 
-                                <form name="listitem-delete" id="listitem-delete" method="post"
-                                      action="/lists/{{ list.id }}/listitems/{{ list_item.id }}/delete">
-                                    <td><button type="submit" class="btn btn-danger btn-xs center-block">Delete<br/>Item</button></td>
-                                </form>
+                                <td>
+                                    <button type="submit" class="btn btn-danger btn-xs center-block"
+                                            onclick=postFormData("/stores/{{ store.id }}/lists/{{ list.id }}/listitems/{{ list_item.id }}/delete","list-detail",responseRedirect)>
+                                        Delete<br/>Item
+                                    </button>
+                                </td>
 
                             </tr>
                         {% endfor %}

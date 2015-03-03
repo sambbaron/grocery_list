@@ -694,8 +694,10 @@ def list_add(store_id):
 
 
 @app.route("/stores/<int:store_id>/lists/<list_id>", methods=["PUT", "POST"])
+@app.route("/stores/<int:store_id>/lists/<list_id>/listitems/new", methods=["POST"])
+@app.route("/stores/<int:store_id>/lists/<list_id>/listitems/<list_item_id>/delete", methods=["POST", "DELETE"])
 @login_required
-def list_update(store_id, list_id):
+def list_update(store_id, list_id, list_item_id=None):
     """ Edit existing List
 
     Return:
@@ -715,6 +717,24 @@ def list_update(store_id, list_id):
     if not update_from_form(data):
         flash("Server error in updating list", "danger")
         return redirect(request.url)
+    
+    # Add or Delete List Items
+    if request.path.find("/listitems/new") > -1:
+        list_item = ListItem(item_name="New Item", list_id=list_id)
+        session.add(list_item)
+        session.commit()
+        flash("Successfully created list item", "success")
+        return url_for("list_get", store_id=list.store_id, list_id=list.id), 201
+
+    if request.path.find("/listitems/{}/delete".format(list_item_id)) > -1:
+        list_item = session.query(ListItem).get(list_item_id)
+        if not list_item:
+            flash("Could not find list item record with id {}".format(list_item_id), "danger")
+            return redirect(url_for("list_get", store_id=list.store_id, list_id=list.id))
+        session.delete(list_item)
+        session.commit()
+        flash("Successfully deleted list item", "success")
+        return url_for("list_get", store_id=list.store_id, list_id=list.id), 200
 
     flash("Successfully updated list", "success")
     return redirect(url_for("list_get",
@@ -744,51 +764,6 @@ def list_delete(store_id, list_id):
 
     flash("Successfully deleted list", "success")
     return redirect(url_for("list_get"))
-
-
-@app.route("/lists/<list_id>/listitems/new", methods=["POST"])
-@login_required
-def list_item_add(list_id):
-    """ Add new List Item to existing List
-
-    Return:
-        List page
-    """
-    list_item = ListItem(item_name="New Item", list_id=list_id)
-    session.add(list_item)
-    session.commit()
-
-    list = session.query(List).get(list_item.list_id)
-
-    flash("Successfully added list item", "success")
-    return redirect(url_for("list_get",
-                            store_id=list.store_id,
-                            list_id=list.id))
-
-
-@app.route("/lists/<list_id>/listitems/<list_item_id>/delete", methods=["POST", "DELETE"])
-@login_required
-def list_item_delete(list_id, list_item_id):
-    """ Delete List Item from existing List
-
-    Return:
-        List page
-    """
-    list_item = session.query(ListItem).get(list_item_id)
-    list = session.query(List).get(list_id)
-
-    # Test whether ListItem record exists
-    if not list_item:
-        flash("Could not find list item record with id {}".format(list_item_id), "danger")
-        return list_get(list_id=list_id)
-
-    session.delete(list_item)
-    session.commit()
-
-    flash("Successfully deleted list item", "success")
-    return redirect(url_for("list_get",
-                            store_id=list.store_id,
-                            list_id=list.id))
 
 
 @app.route("/stores/<int:store_id>/lists/<list_id>/print", methods=["GET"])
