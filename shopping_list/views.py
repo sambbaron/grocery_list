@@ -1,9 +1,8 @@
 """ Application Views """
 
-from flask import render_template, redirect, url_for, request, Response, make_response
+from flask import render_template, redirect, url_for, request, make_response
 from flask.ext.login import current_user, login_user, logout_user, flash, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
-from sqlalchemy import desc
 
 from . import app
 from .database import session
@@ -14,7 +13,8 @@ from .utils import update_from_form
 @app.route("/")
 def index():
     """ App entry routing
-    Login or go to page with data
+
+    Login or go to page with data (lists, routes, stores)
     """
 
     # If no user, redirect to login
@@ -36,14 +36,20 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """ Returns: Login page """
+    """ Login
 
+    Returns:
+        Get: login template
+        Post: Redirect to requested page or index
+    """
+
+    # POST request
     if request.method == "POST":
-        # HTML form entry
         email = request.form["email"]
         password = request.form["password"]
-        # Return user
+        # Set user
         user = session.query(User).filter_by(email=email).first()
+        # Test user exists and password correct
         if user and check_password_hash(user.password, password):
             # Successful login
             login_user(user)
@@ -63,7 +69,11 @@ def login():
 
 @app.route("/logout")
 def logout():
-    """ Returns: Login page """
+    """ Logout
+
+    Return:
+        Redirect to login page
+    """
     logout_user()
     flash("Logged out successfully. Come back soon.", "success")
     return redirect(url_for("login"))
@@ -74,10 +84,10 @@ def profile_get():
     """ Retrieve User Profile
 
     Returns:
-        Empty profile template (signup), or
-        Current user profile page
+        Profile template: profile.html
+            New User: Empty profile template (signup)
+            Existing User: Profile template for current user
     """
-
     # New User signup
     if current_user.is_anonymous():
         return render_template("profile.html")
@@ -96,7 +106,7 @@ def profile_add():
     Input user profile and login new user
 
     Return:
-        Route to stores
+        Redirect to Stores page
     """
     data = request.form
 
@@ -118,10 +128,13 @@ def profile_add():
     user.name = data["name"]
     user.email = data["email"]
 
+    # Add user
     session.add(user)
     session.commit()
 
+    # Login user
     login_user(user)
+
     flash("Successfully created user profile", "success")
     return redirect(url_for("store_get"))
 
@@ -131,12 +144,12 @@ def profile_update(user_id):
     """ Edit existing user profile
 
     Return:
-        Refresh profile page
+        Redirect to profile page
     """
     data = request.form
 
+    # Set User and test whether exists
     user = session.query(User).get(user_id)
-
     if not user:
         flash("Could not find user with id {}".format(user_id), "danger")
         return redirect(url_for("index"))
@@ -171,12 +184,12 @@ def profile_update(user_id):
 @app.route("/stores", methods=["GET"])
 @login_required
 def store_get(store_id=None):
-    """ Retrieve all stores list and single store detail form
+    """ Retrieve all Stores list and single Store detail form
 
     Return:
-        New Store: Empty store detail form
-        Single Store: Store detail form for single store
-        All Stores: All store list with empty store detail form
+        Stores template: stores.html
+            New Store: Empty Store detail form
+            Existing Store: Store detail form for single Store
     """
     # Set all Stores for current User
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id())\
@@ -206,12 +219,12 @@ def store_get(store_id=None):
 @app.route("/stores/new", methods=["POST"])
 @login_required
 def store_add():
-    """ Create new store
+    """ Create new Store
 
-    Add store record and associate with current user
+    Add Store and associate with current user
 
     Return:
-        Store page
+        Redirect to Store page
     """
     data = request.form
 
@@ -231,7 +244,7 @@ def store_add():
     user_store_keys = [str(user_store.user_id), str(user_store.store_id)]
     user_store_keys = " ".join(user_store_keys)
 
-    # Update data in new record
+    # Update from html form data
     if not update_from_form(data, Store=store.id, UserStore=user_store_keys):
         flash("Server error in creating store", "danger")
         return redirect(request.url)
@@ -243,13 +256,13 @@ def store_add():
 @app.route("/stores/<store_id>", methods=["PUT", "POST"])
 @login_required
 def store_update(store_id):
-    """ Edit existing store
+    """ Edit existing Store
 
     Return:
-        Single store page
+        Redirect to Store page
     """
-    # Return form data
     data = request.form
+
     # Set UserStore record
     user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
                                                  UserStore.store_id == store_id).first()
@@ -258,7 +271,7 @@ def store_update(store_id):
         flash("Could not find store with id {} for current user".format(UserStore.store_id), "danger")
         return redirect(url_for("store_get"))
 
-    # Update data
+    # Update from html form data
     if not update_from_form(data):
         flash("Server error in updating store", "danger")
         return redirect(request.url)
@@ -270,16 +283,16 @@ def store_update(store_id):
 @app.route("/stores/<store_id>/delete", methods=["POST", "DELETE"])
 @login_required
 def store_delete(store_id):
-    """ Delete existing store
+    """ Delete existing Store
 
     Return:
-        Stores page
+        Redirect to Store page
     """
 
     # Set UserStore record
     user_store = session.query(UserStore).filter(UserStore.user_id == int(current_user.get_id()),
                                                  UserStore.store_id == store_id).first()
-    # Test whether UserStore record exists
+    # Test whether UserStore exists
     if not user_store:
         flash("Could not find store with id {} for current user".format(UserStore.store_id), "danger")
         return redirect(url_for("store_get"))
@@ -297,14 +310,12 @@ def store_delete(store_id):
 @app.route("/stores/<int:store_id>/routes", methods=["GET"])
 @login_required
 def route_get(store_id=None, route_id=None):
-    """ Retrieve all routes list and single route detail form
-
-    Retrieve all stores associated with route
+    """ Retrieve all Stores/Routes list and single Route detail form
 
     Return:
-        New route: Empty route detail form
-        Single route: route detail form for single route
-        All routes: All route list with empty route detail form
+        Routes template routes.html
+            New Route: Empty Route detail form
+            Existing Route: Route detail form for single Route
     """
     # Set all Stores for current User
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()) \
@@ -364,10 +375,10 @@ def route_get(store_id=None, route_id=None):
 def route_add(store_id):
     """ Create new Route
 
-    Associate new Route with Store
+    Associate new Route with selected Store
 
     Return:
-        Route put method to update data to new record
+        Redirect to Route page
     """
     data = request.form
 
@@ -382,7 +393,7 @@ def route_add(store_id):
     session.add(route)
     session.commit()
 
-    # Update data in new record
+    # Update from html form data
     if not update_from_form(data, Route=route.id):
         flash("Server error in creating route", "danger")
         return redirect(request.url)
@@ -397,13 +408,13 @@ def route_add(store_id):
 @app.route("/stores/<int:store_id>/routes/<int:route_id>/routegroups/<int:route_group_id>/delete", methods=["POST", "DELETE"])
 @login_required
 def route_update(store_id, route_id, route_group_id=None):
-    """ Edit existing Route
+    """ Edit existing Route and add/delete Route Groups
 
     Return:
-        Single Route page
+        Redirect to Route page
     """
-    # Return form data
     data = request.form
+
     # Set Route record
     route = session.query(Route).get(route_id)
 
@@ -416,10 +427,6 @@ def route_update(store_id, route_id, route_group_id=None):
     if not update_from_form(data):
         flash("Server error in updating route", "danger")
         return redirect(request.url)
-
-    # Make Response
-    response = make_response(redirect(url_for("route_get",
-                            store_id=route.store[0].id, route_id=route.id)))
 
     # Add or Delete Route Groups
     if request.path.find("/routegroups/new") > -1:
@@ -454,12 +461,12 @@ def route_delete(store_id, route_id):
     """ Delete existing Route
 
     Return:
-        Routes page
+        Redirect to Route page
     """
     # Set Route record
     route = session.query(Route).get(route_id)
 
-    # Test whether Route record exists
+    # Test whether Route exists
     if not route:
         flash("Could not find route with id {}".format(route_id), "danger")
         return redirect(url_for("route_get"))
@@ -471,101 +478,6 @@ def route_delete(store_id, route_id):
     return redirect(url_for("route_get"))
 
 
-@login_required
-def route_group_add(route_id):
-    """ Add new Route Group to existing Route
-
-    Return:
-        Route page
-    """
-    route_group = RouteGroup(route_id=route_id, route_order=99)
-    session.add(route_group)
-    session.commit()
-
-    route = session.query(Route).get(route_group.route_id)
-
-    # Renumber route order
-    route.renumber_route_order()
-
-    flash("Successfully added route group", "success")
-    return redirect(url_for("route_get",
-                        store_id=route.store[0].id, route_id=route_id))
-
-
-@login_required
-def route_group_delete(route_id, route_group_id):
-    """ Delete Route Group from existing Route
-
-    Return:
-        Route page
-    """
-    route_group = session.query(RouteGroup).get(route_group_id)
-
-    # Test whether RouteGroup record exists
-    if not route_group:
-        flash("Could not find route group record with id {}".format(route_group_id), "danger")
-        return route_get(route_id=route_id)
-
-    route = session.query(Route).get(route_group.route_id)
-
-    session.delete(route_group)
-    session.commit()
-
-    # Renumber route order
-    route.renumber_route_order()
-
-    flash("Successfully deleted route group", "success")
-    return redirect(url_for("route_get",
-                        store_id=route.store[0].id, route_id=route_id))
-
-@login_required
-def route_group_add(route_id):
-    """ Add new Route Group to existing Route
-
-    Return:
-        Route page
-    """
-    route_group = RouteGroup(route_id=route_id, route_order=99)
-    session.add(route_group)
-    session.commit()
-
-    route = session.query(Route).get(route_group.route_id)
-
-    # Renumber route order
-    route.renumber_route_order()
-
-    flash("Successfully added route group", "success")
-    return redirect(url_for("route_get",
-                        store_id=route.store[0].id, route_id=route_id))
-
-
-@login_required
-def route_group_delete(route_id, route_group_id):
-    """ Delete Route Group from existing Route
-
-    Return:
-        Route page
-    """
-    route_group = session.query(RouteGroup).get(route_group_id)
-
-    # Test whether RouteGroup record exists
-    if not route_group:
-        flash("Could not find route group record with id {}".format(route_group_id), "danger")
-        return route_get(route_id=route_id)
-
-    route = session.query(Route).get(route_group.route_id)
-
-    session.delete(route_group)
-    session.commit()
-
-    # Renumber route order
-    route.renumber_route_order()
-
-    flash("Successfully deleted route group", "success")
-    return redirect(url_for("route_get",
-                        store_id=route.store[0].id, route_id=route_id))
-
-
 @app.route("/lists", methods=["GET"])
 @app.route("/stores/<int:store_id>/lists/new", methods=["GET"])
 @app.route("/stores/<int:store_id>/lists/<list_id>", methods=["GET"])
@@ -574,10 +486,10 @@ def route_group_delete(route_id, route_group_id):
 def list_get(store_id=None, list_id=None):
     """ Retrieve all Lists and single List detail form
 
-    Retrieve all Lists associated with Store
-
     Return:
-        lists.html template
+        Lists template: lists.html
+            New List: Empty List detail form
+            Existing List: List detail form for single List
     """
     # Set all Stores for current User
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id()) \
@@ -623,7 +535,7 @@ def list_get(store_id=None, list_id=None):
         list = session.query(List).get(list_id)
 
 
-    # Set Route and List Items data
+    # Set List Items and Route data
     list_items = {}
     route_groups = {}
     if list and list != "new":
@@ -668,10 +580,10 @@ def list_get(store_id=None, list_id=None):
 def list_add(store_id):
     """ Create new List
 
-    Associate new List with Store
+    Associate new List with selected Store
 
     Return:
-        List page
+        Redirect to List page
     """
     data = request.form
 
@@ -682,7 +594,7 @@ def list_add(store_id):
     session.add(list)
     session.commit()
 
-    # Update data in new record
+    # Update from html form data
     if not update_from_form(data, List=list.id):
         flash("Server error in creating list", "danger")
         return redirect(request.url)
@@ -701,19 +613,19 @@ def list_update(store_id, list_id, list_item_id=None):
     """ Edit existing List
 
     Return:
-        Single List page
+        Redirect to List page
     """
-    # Return form data
     data = request.form
-    # Set Route record
+
+    # Set List record
     list = session.query(List).get(list_id)
 
-    # Test whether Route record exists
+    # Test whether List exists
     if not list:
         flash("Could not find list with id {}".format(list_id), "danger")
         return redirect(url_for("list_get"))
 
-    # Update data
+    # Update from html form data
     if not update_from_form(data):
         flash("Server error in updating list", "danger")
         return redirect(request.url)
@@ -748,12 +660,12 @@ def list_delete(store_id, list_id):
     """ Delete existing List
 
     Return:
-        Lists page
+        Redirect to List page
     """
-    # Set Route record
+    # Set List record
     list = session.query(List).get(list_id)
 
-    # Test whether Route record exists
+    # Test whether List exists
     if not list:
         flash("Could not find list with id {}".format(list_id), "danger")
         return redirect(url_for("list_get"))
@@ -782,7 +694,6 @@ def list_print_get(store_id, list_id):
 
     # Set Route and List Items data
     list_items = {}
-    route_groups = {}
     if list:
 
         # Retrieve List Items associated with List (query object)
@@ -804,9 +715,6 @@ def list_print_get(store_id, list_id):
             list_items_q = session.query(list_items_sq) \
                 .outerjoin(route_groups_sq, list_items_sq.c.item_group_id == route_groups_sq.c.item_group_id) \
                 .order_by(route_groups_sq.c.route_order)
-
-            # Return Route Group rows for template
-            route_groups = route_groups_q.all()
 
         # Return List Item rows for template
         list_items = list_items_q.all()
