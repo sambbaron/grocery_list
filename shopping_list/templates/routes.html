@@ -38,10 +38,11 @@
                     <table class="table table-bordered table-condensed">
                         <tr>
                             <th class="text-center" style="width:75%">Group Name
-                                <form name="routegroup-add" id="routegroup-add" method="post"
-                                action="/routes/{{ route.id }}/routegroups/new">
-                                    <button type="submit" class="btn btn-warning btn-xs">New Group</button>
-                                </form>
+                                <br/>
+                                <button type="button" class="btn btn-warning btn-xs"
+                                        onclick=postFormData("/stores/{{ store.id }}/routes/{{ route.id }}/routegroups/new","route-detail",responseRedirect)>
+                                    New Group
+                                </button>
                             </th>
                             <th class="text-center" style="width:15%">Sort Order</th>
                             <th class="text-center" style="width:10%"></th>
@@ -60,10 +61,12 @@
                                 </td>
                                 <td><input type="text" name="RouteGroup.{{ route_group.id }}.route_order" form="route-detail" class="form-control text-center"
                                            value="{{ route_group.route_order }}"></td>
-                                <form name="routegroup-delete" id="routegroup-delete" method="post"
-                                      action="/routes/{{ route.id }}/routegroups/{{ route_group.id }}/delete">
-                                    <td><button type="submit" class="btn btn-danger btn-xs center-block">Delete<br/>Group</button></td>
-                                </form>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-xs center-block"
+                                            onclick=postFormData("/stores/{{ store.id }}/routes/{{ route.id }}/routegroups/{{ route_group.id }}/delete","route-detail",responseRedirect)>
+                                        Delete<br/>Group
+                                    </button>
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>

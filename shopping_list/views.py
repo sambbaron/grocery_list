@@ -1,6 +1,6 @@
 """ Application Views """
 
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, Response, make_response
 from flask.ext.login import current_user, login_user, logout_user, flash, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import desc
@@ -393,8 +393,10 @@ def route_add(store_id):
 
 
 @app.route("/stores/<int:store_id>/routes/<int:route_id>", methods=["PUT", "POST"])
+@app.route("/stores/<int:store_id>/routes/<int:route_id>/routegroups/new", methods=["POST"])
+@app.route("/stores/<int:store_id>/routes/<int:route_id>/routegroups/<int:route_group_id>/delete", methods=["POST", "DELETE"])
 @login_required
-def route_update(store_id, route_id):
+def route_update(store_id, route_id, route_group_id=None):
     """ Edit existing Route
 
     Return:
@@ -415,8 +417,31 @@ def route_update(store_id, route_id):
         flash("Server error in updating route", "danger")
         return redirect(request.url)
 
-    # Renumber route order to remove duplicates
-    route.renumber_route_order()
+    # Make Response
+    response = make_response(redirect(url_for("route_get",
+                            store_id=route.store[0].id, route_id=route.id)))
+
+    # Add or Delete Route Groups
+    if request.path.find("/routegroups/new") > -1:
+        route_group = RouteGroup(route_id=route_id, route_order=99)
+        session.add(route_group)
+        session.commit()
+        route.renumber_route_order()
+        flash("Successfully created route group", "success")
+        return url_for("route_get",
+                       store_id=route.store[0].id, route_id=route.id), 201
+
+    if request.path.find("/routegroups/{}/delete".format(route_group_id)) > -1:
+        route_group = session.query(RouteGroup).get(route_group_id)
+        if not route_group:
+            flash("Could not find route group record with id {}".format(route_group_id), "danger")
+            return route_get(route_id=route_id)
+        session.delete(route_group)
+        session.commit()
+        route.renumber_route_order()
+        flash("Successfully deleted route group", "success")
+        return url_for("route_get",
+                       store_id=route.store[0].id, route_id=route.id), 200
 
     flash("Successfully updated route", "success")
     return redirect(url_for("route_get",
@@ -446,7 +471,6 @@ def route_delete(store_id, route_id):
     return redirect(url_for("route_get"))
 
 
-@app.route("/routes/<int:route_id>/routegroups/new", methods=["POST"])
 @login_required
 def route_group_add(route_id):
     """ Add new Route Group to existing Route
@@ -468,7 +492,53 @@ def route_group_add(route_id):
                         store_id=route.store[0].id, route_id=route_id))
 
 
-@app.route("/routes/<int:route_id>/routegroups/<int:route_group_id>/delete", methods=["POST"])
+@login_required
+def route_group_delete(route_id, route_group_id):
+    """ Delete Route Group from existing Route
+
+    Return:
+        Route page
+    """
+    route_group = session.query(RouteGroup).get(route_group_id)
+
+    # Test whether RouteGroup record exists
+    if not route_group:
+        flash("Could not find route group record with id {}".format(route_group_id), "danger")
+        return route_get(route_id=route_id)
+
+    route = session.query(Route).get(route_group.route_id)
+
+    session.delete(route_group)
+    session.commit()
+
+    # Renumber route order
+    route.renumber_route_order()
+
+    flash("Successfully deleted route group", "success")
+    return redirect(url_for("route_get",
+                        store_id=route.store[0].id, route_id=route_id))
+
+@login_required
+def route_group_add(route_id):
+    """ Add new Route Group to existing Route
+
+    Return:
+        Route page
+    """
+    route_group = RouteGroup(route_id=route_id, route_order=99)
+    session.add(route_group)
+    session.commit()
+
+    route = session.query(Route).get(route_group.route_id)
+
+    # Renumber route order
+    route.renumber_route_order()
+
+    flash("Successfully added route group", "success")
+    return redirect(url_for("route_get",
+                        store_id=route.store[0].id, route_id=route_id))
+
+
 @login_required
 def route_group_delete(route_id, route_group_id):
     """ Delete Route Group from existing Route

@@ -44,9 +44,9 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
+                <p class="alert alert-{{ category }}" style="margin-bottom: 0">
                     {{ message }}
-                </div>
+                </p>
             {% endfor %}
         {% endif %}
         {% endwith %}
@@ -57,7 +57,7 @@
         </div>
     </div>
 
-{#    <script type="application/javascript" src="/static/js/app.js"></script>#}
+    <script type="application/javascript" src="/static/js/main.js"></script>
 {#    <script src="/static/bower/jquery/dist/jquery.min.js"></script>#}
 {#    <script src="/static/bower/jquery.serializeJSON/jquery.serializejson.min.js"></script>#}
 </body>
