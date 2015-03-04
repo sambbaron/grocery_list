@@ -135,7 +135,7 @@ def profile_add():
     # Login user
     login_user(user)
 
-    flash("Successfully created user profile", "success")
+    flash("Welcome to the Shopping List App - Please visit the <a href='/help' target='_blank'>Help Page</a> to get started", "success")
     return redirect(url_for("store_get"))
 
 
