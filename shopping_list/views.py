@@ -233,9 +233,17 @@ def store_add():
     session.add(store)
     session.commit()
 
+    # Clone default Route to associate with new Store and User
+    # Set default Route
+    default_route = session.query(Route).filter(Route.default == True).first()
+    new_route = default_route.clone("Default Route")
+    new_route.store = [store]
+    new_route.user_id = current_user.get_id()
+
     # Associate new Store with current User
     user_store = UserStore(store_id=store.id,
                            user_id=current_user.get_id())
+
 
     session.add(user_store)
     session.commit()
