@@ -31,6 +31,7 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
+            <li><a href="/help" target="_blank"><button type="button" class="btn btn-default btn-md navbar-btn">Help</button></a></li>
             {% if current_user.is_anonymous() == True %}
                 <li><a href="/profile"><button type="button" class="btn btn-default btn-md navbar-btn">Signup</button></a></li>
                 <li><a href="/login"><button type="button" class="btn btn-default btn-md navbar-btn">Login</button></a></li>
@@ -58,7 +59,5 @@
     </div>
 
     <script type="application/javascript" src="/static/js/main.js"></script>
-{#    <script src="/static/bower/jquery/dist/jquery.min.js"></script>#}
-{#    <script src="/static/bower/jquery.serializeJSON/jquery.serializejson.min.js"></script>#}
 </body>
 </html>

@@ -1,6 +1,6 @@
 """ Application Views """
 
-from flask import render_template, redirect, url_for, request, make_response
+from flask import render_template, redirect, url_for, request, send_file
 from flask.ext.login import current_user, login_user, logout_user, flash, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -177,6 +177,12 @@ def profile_update(user_id):
 
     flash("Successfully updated user profile", "success")
     return redirect(url_for("profile_get"))
+
+
+@app.route("/help")
+def help():
+    help_file = "static/docs/Shopping List App - Help.pdf"
+    return send_file(help_file)
 
 
 @app.route("/stores/new", methods=["GET"])
