@@ -8,7 +8,7 @@
 
     <title>Shopping List App</title>
 </head>
-<body>
+<body style="background-color: #e9e9e9">
     <header class="nav navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header navbar-left">
@@ -43,7 +43,7 @@
             </ul>
         </div>
     </header>
-    <div id="main" class="jumbotron" style="padding-top: 5.75em">
+    <div id="main" style="padding-top: 5.75em">
         <div id="message">
             {%- with messages = get_flashed_messages(with_categories=true) %}
             {%- if messages %}
