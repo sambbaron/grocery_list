@@ -16,10 +16,10 @@
                 <form name="store-detail" class="form-horizontal" id="store-detail" method="post"
                 action={% if store == "new" %}"/stores/new"{% else %}"/stores/{{ store.id }}"{% endif %} >
 
-                    <label for="store.name" class="col-md-3 control-label">Name</label>
+                    <label for="store.name" class="col-md-3 control-label">Name (required)</label>
                     <div class="form-group">
                         <div class="col-md-8"><input type="text" id="store.name" name="Store.{{ store.id }}.name" class="form-control"
-                                                     value="{{ store.name if store != "new" }}"></div>
+                                                     value="{{ store.name if store != "new" }}" required></div>
                     </div>
 
                     <label for="nickname" class="col-md-3 control-label">Nickname</label>

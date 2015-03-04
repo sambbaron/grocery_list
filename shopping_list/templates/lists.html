@@ -25,9 +25,9 @@
                 action={% if list == "new" %}"/stores/{{ store.id }}/lists/new"{% else %}"/stores/{{ store.id }}/lists/{{ list.id }}"{% endif %} >
 
                 <div class="col-md-12 form-group form-inline">
-                    <label for="list.shop_date" class="col-md-2 control-label">Shop Date</label>
+                    <label for="list.shop_date" class="col-md-2 control-label">Shop Date (required)</label>
                     <input type="date" id="list.shop_date" name="List.{{ list.id }}.shop_date" class="col-md-4 form-control text-center"
-                           value="{{ list.shop_date if list != "new" }}">
+                           value="{{ list.shop_date if list != "new" }}" required>
 
                     <label for="list.name" class="col-md-2 control-label">List Name (optional)</label>
                     <input type="text" id="list.name" name="List.{{ list.id }}.name" class="col-md-5 form-control"

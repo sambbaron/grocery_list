@@ -24,14 +24,14 @@
                 <form name="route-detail" id="route-detail" class="form-horizontal" method="post"
                 action={% if route == "new" %}"/stores/{{ store.id }}/routes/new"{% else %}"/stores/{{ store.id }}/routes/{{ route.id }}"{% endif %} >
 
-                    <label for="route.name" class="col-md-2 control-label">Name</label>
+                    <label for="route.name" class="col-md-2 control-label">Name (required)</label>
                     <div class="form-group">
                         <div class="col-md-7"><input type="text" id="route.name" name="Route.{{ route.id }}.name" class="form-control"
-                                                     value="{{ route.name if route != "new" }}"></div>
+                                                     value="{{ route.name if route != "new" }}" required></div>
                     </div>
 
                 </form>
-                <br>
+
                 {% if route != "new" %}
                     <div id="route-detail-itemgroups">
                     <h4 class="text-center">Item Groups</h4>
