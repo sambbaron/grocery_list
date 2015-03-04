@@ -122,14 +122,17 @@ def add_route_group():
     if session.query(ItemGroup).get(1) is None:
         add_item_group()
 
+    item_groups_count = session.query(ItemGroup).count()
+
     # Add first six Item Groups ascending to first test Route
-    for n in range(1, 7):
+    for n in range(1, item_groups_count+1):
         session.add(RouteGroup(route_id=1, item_group_id=n, route_order=n))
+        session.add(RouteGroup(route_id=2, item_group_id=n, route_order=n))
 
     # Add first six Item Groups descending to second test Route
     r = 1
-    for n in range(6, 0, -1):
-        session.add(RouteGroup(route_id=2, item_group_id=n, route_order=r))
+    for n in range(item_groups_count, 0, -1):
+        session.add(RouteGroup(route_id=3, item_group_id=n, route_order=r))
         r += 1
 
     session.commit()
