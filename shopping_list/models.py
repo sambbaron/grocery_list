@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 
 from flask.ext.login import UserMixin
 
-from .database import Base, session
+from .database import Base, engine, session
 
 
 class User(Base, UserMixin):
@@ -110,6 +110,30 @@ class Route(Base):
                          backref="route")
     item_group = relationship("RouteGroup", backref="route")
     list = relationship("List", backref="route")
+
+    def clone(self, new_name):
+        """ Clone Route and associated Route Groups
+
+        Return:
+            New Route
+        """
+        # Create new Route
+        route = Route(name=new_name)
+        session.add(route)
+        session.commit()
+
+        # Set Route Groups for current Route
+        route_groups = session.query(RouteGroup.item_group_id, RouteGroup.route_order)\
+            .filter(RouteGroup.route_id == self.id).all()
+        # Set values list of Route Groups for new Route
+        route_groups_list = []
+        for x in route_groups:
+            route_groups_list.append({"item_group_id": x[0], "route_order": x[1], "route_id": route.id})
+        # Insert values list into RouteGroup table
+        ins = RouteGroup.__table__.insert().values(route_groups_list)
+        engine.execute(ins)
+
+        return route
 
     def renumber_route_order(self):
         """ Renumber route order for Route Groups associated with Route
