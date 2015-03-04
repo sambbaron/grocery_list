@@ -40,13 +40,12 @@
     {"route_id": 1, "item_group_id": 16, "route_order": 16},
     {"route_id": 1, "item_group_id": 17, "route_order": 17}
   ],
-  "ItemMeasurement":[
+  "ItemMeasurements":[
     {"name": "pounds", "abbreviation": "lbs"},
     {"name": "ounces", "abbreviation": "oz"},
     {"name": "each", "abbreviation": "ea"},
     {"name": "pack", "abbreviation": "pk"},
     {"name": "cans", "abbreviation": "cn"},
-    {"name": "dozen", "abbreviation": "doz"},
-    {"name": "pounds", "abbreviation": "lbs"}
+    {"name": "dozen", "abbreviation": "doz"}
   ]
 }
