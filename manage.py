@@ -45,16 +45,15 @@ def preload_data():
         Retrieve from preload_data.json file
         Schema: {Model Name: [Values Dictionary]}
     """
-
     resetdb()
 
     root_path = os.path.dirname(os.path.realpath(__file__))
     with open(root_path + "/shopping_list/preload_data.json") as data_file:
         data = json.load(data_file)
 
-    for model_name, values_dict in sorted(data.items()):
+    for model_name, values_list in sorted(data.items()):
         table = getattr(getattr(models, model_name),"__table__")
-        ins = getattr(table, "insert")().values(values_dict)
+        ins = getattr(table, "insert")().values(values_list)
         engine.execute(ins)
         print("{} data added.".format(model_name))
 
