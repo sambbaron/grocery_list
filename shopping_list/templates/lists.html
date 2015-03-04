@@ -128,10 +128,10 @@
                 {% endif %}
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-8">
-                        <button type="submit" form="list-detail" class="btn btn-success btn-lg center-block">
+                        <button type="submit" form="list-detail" class="btn btn-success btn-lg center-block" style="float: left;">
                             {{ "Create List" if list == "new" else "Save List" }}
                         </button>
-                        <br/>
+{#                        <br/>#}
                         <a href="/stores/{{ store.id }}/lists/{{ list.id }}/print" target="_blank">
                             <button type="button" class="btn btn-info btn-lg center-block">
                                 Printable/Viewable List
