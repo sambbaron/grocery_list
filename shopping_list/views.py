@@ -464,6 +464,8 @@ def route_update(store_id, route_id, route_group_id=None):
         return url_for("route_get",
                        store_id=route.store[0].id, route_id=route.id), 200
 
+    route.renumber_route_order()
+
     flash("Successfully updated route", "success")
     return redirect(url_for("route_get",
                             store_id=route.store[0].id, route_id=route.id))
