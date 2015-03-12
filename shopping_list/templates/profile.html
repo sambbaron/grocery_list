@@ -5,7 +5,6 @@
         <h3 class="text-center">User Profile</h3>
         <form name="user-profile" id="user-profile" method="post"
         action={% if current_user.is_anonymous() == True  %}"/profile/signup"{% else %}"/profile/{{ current_user.get_id() }}"{% endif %} >
-            <input type="hidden" name="_method" value={% if current_user.is_anonymous() == True  %}"post"{% else %}"put"{% endif %}/>
             <fieldset class="form-group">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" name="name" placeholder="Your Name (Optional)" value="{{ name }}">
