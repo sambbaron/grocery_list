@@ -201,13 +201,9 @@ def store_get(store_id=None):
     stores = session.query(UserStore).filter(UserStore.user_id == current_user.get_id())\
         .order_by(UserStore.store_id).all()
 
-    # If no stores, then return empty template
-    if len(stores) == 0:
-        return render_template("stores.html", view="store", stores=stores, store="new")
-
     # Set selected Store
-    # New Store requested
-    if request.path.find("/stores/new") > -1:
+    # If no Stores for current User or New Store requested in request URL
+    if len(stores) == 0 or request.path.find("/stores/new") > -1:
         # Set as new Store entry
         store = "new"
     # If no Store, select first store associated with current user
