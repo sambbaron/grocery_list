@@ -355,7 +355,7 @@ def route_get(store_id=None, route_id=None):
 
     # Set selected Route
     # New Route requested
-    if request.path.find("/routes/new") > -1:
+    if len(routes) == 0 or request.path.find("/routes/new") > -1:
         # Set as new Route entry
         route = "new"
     # If Store provided, but no Route, lookup first Route associated with Store
