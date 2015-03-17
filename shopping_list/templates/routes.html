@@ -50,7 +50,7 @@
                         {% for route_group in route_groups %}
                             <tr>
                                 <td>
-                                    <select name="RouteGroup.{{ route_group.id }}.item_group_id" form="route-detail"  class="form-control">
+                                    <select name="RouteGroup.{{ route_group.id }}.item_group_id" id="route-group.id" form="route-detail"  class="form-control">
                                         <option></option>
                                         {% for item_group in item_groups %}
                                             <option value="{{ item_group.id }}"
@@ -59,7 +59,7 @@
                                         {% endfor %}
                                     </select>
                                 </td>
-                                <td><input type="text" name="RouteGroup.{{ route_group.id }}.route_order" form="route-detail" class="form-control text-center"
+                                <td><input type="text" name="RouteGroup.{{ route_group.id }}.route_order" id="route-group.order" form="route-detail" class="form-control text-center"
                                            value="{{ route_group.route_order }}"></td>
                                 <td>
                                     <button type="button" class="btn btn-danger btn-xs center-block"
