@@ -535,7 +535,7 @@ def list_get(store_id=None, list_id=None):
 
     # Set selected List
     # New List requested
-    if request.path.find("/lists/new") > -1:
+    if len(lists) == 0 or request.path.find("/lists/new") > -1:
         # Set as new List entry
         list = "new"
     # If Store provided, but no List, lookup first List associated with Store
