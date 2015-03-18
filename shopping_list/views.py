@@ -690,7 +690,7 @@ def list_delete(store_id, list_id):
     return redirect(url_for("list_get"))
 
 
-@app.route("/stores/<int:store_id>/lists/<list_id>/print", methods=["GET"])
+@app.route("/stores/<int:store_id>/lists/<int:list_id>/print", methods=["GET"])
 @login_required
 def list_print_get(store_id, list_id):
     """ Retrieve viewable/printable List
