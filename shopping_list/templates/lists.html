@@ -38,7 +38,7 @@
 
                 <div class="col-md-12 form-group form-inline pull-left">
                     <label for="list.route" class="col-md-2 control-label">Route</label>
-                    <select name="List.{{ list.id }}.route_id" form="list-detail"  class="col-md-4 form-control text-center">
+                    <select name="List.{{ list.id }}.route_id" id="route.id" form="list-detail"  class="col-md-4 form-control text-center">
                         <option value="">No Route</option>
                         {% for route in routes %}
                             <option value="{{ route.id }}" class="text-center"
@@ -81,17 +81,17 @@
                         {% for list_item in list_items %}
                             <tr>
 
-                                <td><input type="text" name="ListItem.{{ list_item.id }}.item_name" form="list-detail" class="form-control"
+                                <td><input type="text" name="ListItem.{{ list_item.id }}.item_name" id="list-item.name" form="list-detail" class="form-control"
                                            value="{{ list_item.item_name }}"></td>
 
-                                <td><input type="text" name="ListItem.{{ list_item.id }}.item_notes" form="list-detail" class="form-control"
+                                <td><input type="text" name="ListItem.{{ list_item.id }}.item_notes" id="list-item.notes" form="list-detail" class="form-control"
                                            value="{{ list_item.item_notes }}"></td>
 
-                                <td><input type="text" name="ListItem.{{ list_item.id }}.item_quantity" form="list-detail" class="form-control text-center"
+                                <td><input type="text" name="ListItem.{{ list_item.id }}.item_quantity" id="list-item.quantity" form="list-detail" class="form-control text-center"
                                            value="{{ list_item.item_quantity }}"></td>
 
                                 <td>
-                                    <select name="ListItem.{{ list_item.id }}.item_measurement_id" form="list-detail"  class="form-control text-center">
+                                    <select name="ListItem.{{ list_item.id }}.item_measurement_id" id="list-item.measurement"form="list-detail"  class="form-control text-center">
                                         <option></option>
                                         {% for item_measurement in item_measurements %}
                                             <option value="{{ item_measurement.id }}" class="text-center"
@@ -103,7 +103,7 @@
                                 </td>
 
                                 <td>
-                                    <select name="ListItem.{{ list_item.id }}.item_group_id" form="list-detail"  class="form-control">
+                                    <select name="ListItem.{{ list_item.id }}.item_group_id" form="list-detail" id="route-group" class="form-control">
                                         <option></option>
                                         {% for route_group in route_groups %}
                                             <option value="{{ route_group.item_group.id }}"
